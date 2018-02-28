@@ -102,9 +102,8 @@ client.on("message", async message => {
 });
 
 // Such ugly code, but it works
-// test if message is from this bot
-client.on('messageReactionAdd', (reaction, user) => {
-    if (user.id !== '417089763967893504') {
+client.on('messageReactionAdd', async (reaction, user) => {
+    if (user.id !== '417089763967893504' && reaction.message.author.id === '417089763967893504') {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
@@ -119,9 +118,16 @@ client.on('messageReactionAdd', (reaction, user) => {
                     for (let j = 0; j < arr.length; j++) {
                         if (arr[j].topic === topics[i]) {
                             let role = reaction.message.guild.roles.find("name", arr[j].name);
-                            //user.addRole(role).catch(console.error);
-                            console.log(role);
+                            //user.addRole(role).then(console.log('role added?')).catch(console.error);
                             //role.addMember(user).catch(console.error);
+                            //console.log(reaction);
+
+                            let member = await reaction.message.guild.fetchMember(user.id);
+                            //console.log(member);
+                            // or the person who made the command: let member = message.member;
+
+                            // Add the role!
+                            member.addRole(role).catch(console.error);
                         }
                     }
                 }
