@@ -135,5 +135,31 @@ client.on('messageReactionAdd', async (reaction, user) => {
         }
     }
 });
+// 100% new function
+client.on('messageReactionRemove', async (reaction, user) => {
+    if (user.id !== '417089763967893504' && reaction.message.author.id === '417089763967893504') {
+        let str = reaction.message.content.split("\n");
+        let topics = [];
+        let emojis = [];
+        if (str[0] === 'React to add yourself to the exraid channels') {
+            for (let i = 2; i < str.length; i += 2) {
+                emojis.push(str[i].substr(0, 2));
+                topics.push(str[i].substr(6, str[i].length - 7));
+            }
+            for (let i = 0; i < emojis.length; i++) {
+                if (reaction.emoji.name === emojis[i]) {
+                    let arr = reaction.message.channel.parent.children.array();
+                    for (let j = 0; j < arr.length; j++) {
+                        if (arr[j].topic === topics[i]) {
+                            let role = reaction.message.guild.roles.find("name", arr[j].name);
+                            let member = await reaction.message.guild.fetchMember(user.id);
+                            member.removeRole(role).catch(console.error);
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
 
 client.login(config.token);
