@@ -9,6 +9,15 @@ const config = require("./config.json");
 client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
     client.user.setActivity(`Pokemon Go`);
+    let guilds = client.guilds.array();
+    for (let i = 0; i < guilds.length; i++) {
+        let gChannels = guilds[i].channels.array();
+        for (let j = 0; j < gChannels.length; j++) {
+            if (gChannels[j].name === "ex-rsvp") {
+                gChannels[j].fetchMessages().catch(console.error);
+            }
+        }
+    }
 });
 
 client.on("message", async message => {
@@ -93,6 +102,7 @@ client.on("message", async message => {
 });
 
 // Such ugly code, but it works
+// test if message is from this bot
 client.on('messageReactionAdd', (reaction, user) => {
     if (user.id !== '417089763967893504') {
         let str = reaction.message.content.split("\n");
