@@ -125,7 +125,7 @@ client.on('messageReactionAdd', (reaction, user) => {
                             let role = reaction.message.guild.roles.find("name", arr[j].name);
                             //user.addRole(role).catch(console.error);
                             console.log(role);
-                            role.addMember(user).catch(console.error);
+                            //role.addMember(user).catch(console.error);
                         }
                     }
                 }
@@ -135,5 +135,3 @@ client.on('messageReactionAdd', (reaction, user) => {
 });
 
 client.login(config.token);
-
-417670964466286593
