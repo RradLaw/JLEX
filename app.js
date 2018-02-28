@@ -43,7 +43,7 @@ client.on("message", async message => {
         message.channel.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with');
         message.channel.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
     } else if (command === "addexraid") {
-        message.delete().catch(O_o => { });
+        //message.delete().catch(O_o => { });
         let server = message.guild;
 
         let raidName = args.shift() || 'exraid' + Math.floor(Math.random() * 10000);
@@ -60,23 +60,33 @@ client.on("message", async message => {
                 channel.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
 
                 let exRole = message.guild.roles.find("name", "ExRaids");
-                channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true });
+                channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
                 let erroneRole = message.guild.roles.find("name", "@everyone");
-                channel.overwritePermissions(erroneRole, { READ_MESSAGES: false });
+                channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).catch(console.error);
 
                 server.createRole({ name: raidName })
                     .then(role => {
-                        channel.overwritePermissions(role, { READ_MESSAGES: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true });
+                        channel.overwritePermissions(role, { READ_MESSAGES: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
                     }).catch(console.error);
 
                 channel.setTopic(raidDesc).catch(console.error);
+
+                message.channel.send("Exraid " + raidName + " created.");
             });
     } else if (command === "deleteexraid") {
-
-        message.delete().catch(O_o => { });
-        let role = message.guild.roles.find("name", message.channel.name);
-        if (role) role.delete();
-        message.channel.delete();
+        if (args.length === 0) {
+            let role = message.guild.roles.find("name", message.channel.name);
+            if (role) role.delete().catch(console.error);
+            message.channel.delete().catch(console.error);
+        } else {
+            for (let i = 0; i < args.length; i++) {
+                let jackiechannel = message.guild.channels.find("name", args[i]);
+                let role = message.guild.roles.find("name", args[i]);
+                if (role) role.delete().catch(console.error);
+                jackiechannel.delete().catch(console.error);
+                message.channel.send('RIP ' + args[i] + ' exraid.');
+            }
+        }
 
     } else if (command === "reply") {
 
@@ -95,13 +105,12 @@ client.on("message", async message => {
         message.channel.send(msg)
             .then(message => {
                 for (let i = 1; i < args.length; i += 2) {
-                    message.react(args[i]);
+                    message.react(args[i]).catch(console.error);
                 }
             }).catch(error => console.log(error));;
     }
 });
 
-// Such ugly code, but it works
 client.on('messageReactionAdd', async (reaction, user) => {
     if (user.id !== '417089763967893504' && reaction.message.author.id === '417089763967893504') {
         let str = reaction.message.content.split("\n");
@@ -118,15 +127,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     for (let j = 0; j < arr.length; j++) {
                         if (arr[j].topic === topics[i]) {
                             let role = reaction.message.guild.roles.find("name", arr[j].name);
-                            //user.addRole(role).then(console.log('role added?')).catch(console.error);
-                            //role.addMember(user).catch(console.error);
-                            //console.log(reaction);
-
                             let member = await reaction.message.guild.fetchMember(user.id);
-                            //console.log(member);
-                            // or the person who made the command: let member = message.member;
-
-                            // Add the role!
                             member.addRole(role).catch(console.error);
                         }
                     }
