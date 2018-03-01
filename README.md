@@ -28,3 +28,7 @@ Outputs all current exraid channels and topics, allowing for emoji assignment of
 ##### !rolecall
 Coming soon to a JLEX bot near you.
 Displays all users with the role channel-name.
+
+## TODO
+Rolecall
+Give mods access to channels

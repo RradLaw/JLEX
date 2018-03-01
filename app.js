@@ -112,7 +112,7 @@ client.on("message", async message => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) => {
-    if (user.id !== '417089763967893504' && reaction.message.author.id === '417089763967893504') {
+    if (user.id !== client.user.id && reaction.message.author.id === client.user.id) {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
@@ -138,7 +138,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
 });
 // 100% new function
 client.on('messageReactionRemove', async (reaction, user) => {
-    if (user.id !== '417089763967893504' && reaction.message.author.id === '417089763967893504') {
+    if (user.id !== client.user.id && reaction.message.author.id === client.user.id) {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
