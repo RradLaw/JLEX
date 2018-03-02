@@ -26,8 +26,7 @@ Delete the channel "channel-name" and unassigns everyone with role "channel-name
 Outputs all current exraid channels and topics, allowing for emoji assignment of roles
 
 ##### !rolecall
-Coming soon to a JLEX bot near you.
 Displays all users with the role channel-name.
 
 ## TODO
-Rolecall command
+Add team RSVPs to rolecall.

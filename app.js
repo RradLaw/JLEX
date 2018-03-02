@@ -28,12 +28,20 @@ client.on("message", async message => {
     // Ignores messages without prefix
     if (message.content.indexOf(config.prefix) !== 0) return;
 
-    // Ignores messages not from "Admin" role
-    if (!message.member.roles.some(r => ["Admin"].includes(r.name))) return;
 
     // Splits command into array
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
+
+    if (command === "rolecall") {
+        let sweetrole = message.guild.roles.find("name", message.channel.name);
+        let roleusers = '';
+        message.guild.roles.get(sweetrole.id).members.map(m => roleusers += m.displayName + ", ");
+        message.channel.send('Users in lobby: ' + roleusers);
+    }
+
+    // Ignores messages not from "Admin" role
+    if (!message.member.roles.some(r => ["Admin"].includes(r.name))) return;
 
     if (command === "exwelcome") {
         message.delete().catch(O_o => { });
