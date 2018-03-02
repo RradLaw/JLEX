@@ -30,5 +30,4 @@ Coming soon to a JLEX bot near you.
 Displays all users with the role channel-name.
 
 ## TODO
-Rolecall
-Give mods access to channels
+Rolecall command

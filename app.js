@@ -61,6 +61,8 @@ client.on("message", async message => {
 
                 let exRole = message.guild.roles.find("name", "ExRaids");
                 channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+                let modRole = message.guild.roles.find("name", "Mod");
+                channel.overwritePermissions(modRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
                 let erroneRole = message.guild.roles.find("name", "@everyone");
                 channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).catch(console.error);
 
