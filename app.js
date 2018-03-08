@@ -45,11 +45,7 @@ client.on("message", async message => {
 
     if (command === "exwelcome") {
         message.delete().catch(O_o => { });
-        message.channel.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon.Happy raiding!');
-        message.channel.send('------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with');
-        message.channel.send('------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with');
-        message.channel.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with');
-        message.channel.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
+        welcomeMessage(message.channel);
     } else if (command === "addexraid") {
         //message.delete().catch(O_o => { });
         let server = message.guild;
@@ -61,11 +57,7 @@ client.on("message", async message => {
             .then(channel => {
                 channel.setParent(message.channel.parent);
 
-                channel.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon.Happy raiding!');
-                channel.send('------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with');
-                channel.send('------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with');
-                channel.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with');
-                channel.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
+                welcomeMessage(channel);
 
                 let exRole = message.guild.roles.find("name", "ExRaids");
                 channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
@@ -174,3 +166,11 @@ client.on('messageReactionRemove', async (reaction, user) => {
 });
 
 client.login(config.token);
+
+function welcomeMessage(c) {
+    c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!');
+    c.send('------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with');
+    c.send('------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with');
+    c.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with');
+    c.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
+}
