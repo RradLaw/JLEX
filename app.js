@@ -106,9 +106,9 @@ client.on("message", async message => {
             msg += args[i + 1] + " : `" + topic.topic + "`\n\n";
         }
         message.channel.send(msg)
-            .then(message => {
+            .then(async message => {
                 for (let i = 1; i < args.length; i += 2) {
-                    message.react(args[i]).catch(console.error);
+                    await message.react(args[i]).catch(console.error);
                 }
             }).catch(console.error);
     }
