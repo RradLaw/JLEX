@@ -2,7 +2,8 @@ const Discord = require("discord.js");
 
 const client = new Discord.Client();
 
-const config = require("./config.json");
+// change this to ./config.json to get it to work
+const config = require("./config2.json");
 // config.token contains the bot's token
 // config.prefix contains the message prefix.
 
