@@ -36,3 +36,4 @@ Displays all users with the role channel-name.
 * Add !leave function
 * Add !help dialogue
 * Fix custom emojis in reaction
+* Sort role call alphabetically
