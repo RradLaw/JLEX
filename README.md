@@ -33,3 +33,4 @@ Displays all users with the role channel-name.
 * Show un-RSVP'd users in rolecall
 * Add !leave function
 * Add !help dialogue
+* Fix exraid list emoji order

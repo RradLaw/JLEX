@@ -91,7 +91,7 @@ client.on("message", async message => {
             }
         }
 
-    } else if (command === "reply") {
+    } else if (command === "blush") {
 
         message.delete().catch(O_o => { });
         message.channel.send(':blush:');
@@ -166,8 +166,6 @@ client.on('messageReactionRemove', async (reaction, user) => {
     }
 });
 
-client.login(config.token);
-
 async function welcomeMessage(c) {
     c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!')
         .then(message => {
@@ -178,3 +176,5 @@ async function welcomeMessage(c) {
     c.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with');
     c.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
 }
+
+client.login(config.token);
