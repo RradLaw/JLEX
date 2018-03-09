@@ -30,7 +30,6 @@ Displays all users with the role channel-name.
 
 ## TODO
 * Add team RSVPs to rolecall
-* Pin welcome message
 * Show un-RSVP'd users in rolecall
 * Add !leave function
 * Add !help dialogue

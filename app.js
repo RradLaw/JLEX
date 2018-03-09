@@ -21,6 +21,7 @@ client.on("ready", () => {
 });
 
 client.on("message", async message => {
+    if (message.type === "PINS_ADD" && message.author.bot) return message.delete();
     // This event will run on every single message received, from any channel or DM.
     // Ignores messages from all bots
     if (message.author.bot) return;
@@ -109,7 +110,7 @@ client.on("message", async message => {
                 for (let i = 1; i < args.length; i += 2) {
                     message.react(args[i]).catch(console.error);
                 }
-            }).catch(error => console.log(error));;
+            }).catch(console.error);
     }
 });
 
@@ -167,8 +168,11 @@ client.on('messageReactionRemove', async (reaction, user) => {
 
 client.login(config.token);
 
-function welcomeMessage(c) {
-    c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!');
+async function welcomeMessage(c) {
+    c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!')
+        .then(message => {
+            message.pin();
+        }).catch(console.error);
     c.send('------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with');
     c.send('------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with');
     c.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with');
