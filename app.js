@@ -46,16 +46,11 @@ client.on("message", async message => {
         } else {
             message.channel.send('Role not found for rolecall' + (tagID ? ' <@!' + tagID + '>' : '')).catch(console.error);
         }
-    }
-    if (command === "leave") {
-        /*
+    } else if (command === "leave") {
         let sweetrole = message.guild.roles.find("name", message.channel.name);
         if (sweetrole) {
-
-            let role = reaction.message.guild.roles.find("name", arr[j].name);
-            let member = await reaction.message.guild.fetchMember(user.id);
-            member.removeRole(role).catch(console.error);
-        }*/
+            message.member.removeRole(sweetrole).then(message.channel.send('\:wave:')).catch(console.error);
+        }
     }
 
     // Ignores messages not from "Admin" role
