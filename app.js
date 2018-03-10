@@ -37,7 +37,8 @@ client.on("message", async message => {
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
     const command = args.shift().toLowerCase();
 
-    if (command === "rolecall") {
+    // Outputs users with a role in the channel. Sorts them alphabetically.
+    if (command === "rolecall" || command === "rollcall") {
         let sweetrole = message.guild.roles.find("name", message.channel.name);
         if (sweetrole) {
             let roleusers = '';
@@ -52,6 +53,7 @@ client.on("message", async message => {
         } else {
             message.channel.send('Role not found for rolecall' + (tagID ? ' <@!' + tagID + '>' : '')).catch(console.error);
         }
+        // Removes user from the channel
     } else if (command === "leave") {
         let sweetrole = message.guild.roles.find("name", message.channel.name);
         if (sweetrole) {
@@ -66,7 +68,6 @@ client.on("message", async message => {
         message.delete().catch(O_o => { });
         welcomeMessage(message.channel);
     } else if (command === "addexraid") {
-        //message.delete().catch(O_o => { });
         let server = message.guild;
 
         let raidName = args.shift() || 'exraid' + Math.floor(Math.random() * 10000);
@@ -94,7 +95,7 @@ client.on("message", async message => {
 
                 message.channel.send("Exraid " + raidName + " created.");
             });
-    } else if (command === "deleteexraid") {
+    } else if (command === "deleteexraid" || command === "deleteexraids") {
         if (args.length === 0) {
             let role = message.guild.roles.find("name", message.channel.name);
             if (role) role.delete().catch(console.error);
@@ -110,11 +111,10 @@ client.on("message", async message => {
         }
 
     } else if (command === "blush") {
-
         message.delete().catch(O_o => { });
         message.channel.send(':blush:');
 
-    } else if (command === "listexraids") {
+    } else if (command === "listexraids" || command === "listexraid") {
 
         let server = message.guild;
         let msg = 'React to add yourself to the exraid channels\n\n';
