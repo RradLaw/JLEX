@@ -113,7 +113,7 @@ client.on("message", async message => {
         message.delete().catch(O_o => { });
         message.channel.send(':blush:');
     } else if (command === "listexraids" || command === "listexraid") {
-        message.delete().catch(O_o => { });
+        //message.delete().catch(O_o => { });
         let server = message.guild;
         let msg = 'React to add yourself to the exraid channels\n\n';
         let topic = '';
@@ -167,7 +167,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         if (str[0] === 'React to add yourself to the exraid channels') {
             for (let i = 2; i < str.length; i += 2) {
                 emojis.push(str[i].substr(0, 2));
-                topics.push(str[i].substr(6, str[i].length - 7));
+                topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
             }
             for (let i = 0; i < emojis.length; i++) {
                 if (reaction.emoji.name === emojis[i]) {
@@ -193,7 +193,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
         if (str[0] === 'React to add yourself to the exraid channels') {
             for (let i = 2; i < str.length; i += 2) {
                 emojis.push(str[i].substr(0, 2));
-                topics.push(str[i].substr(6, str[i].length - 7));
+                topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
             }
             for (let i = 0; i < emojis.length; i++) {
                 if (reaction.emoji.name === emojis[i]) {

@@ -28,11 +28,13 @@ Delete the channel "channel-name" and unassigns everyone with role "channel-name
 ##### !listexraids Channel-name emoji, Channel-name emoji, etc. 
 Outputs all current exraid channels and topics, allowing for emoji assignment of roles
 
-##### !rolecall
+##### !rolecall or !rollcall
 Displays all users with the role channel-name.
 
+##### !team or !teams
+Displays the count for each team. Numbers gathered from reactions to the pinned posts.
+
 ## TODO
-* Add team RSVPs to rolecall
-* Show un-RSVP'd users in rolecall
+* Show un-RSVP'd users in team
 * Add !help dialogue
 * Fix custom emojis in reaction
