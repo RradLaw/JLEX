@@ -7,6 +7,8 @@ const config = require("./config2.json");
 // config.token contains the bot's token
 // config.prefix contains the message prefix.
 
+const tagID = config.adminID === "DISCORD_ID_OF_ADMIN" ? null : config.adminID;
+
 client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
     client.user.setActivity(`Pokemon Go`);
@@ -37,9 +39,23 @@ client.on("message", async message => {
 
     if (command === "rolecall") {
         let sweetrole = message.guild.roles.find("name", message.channel.name);
-        let roleusers = '';
-        message.guild.roles.get(sweetrole.id).members.map(m => roleusers += m.displayName + ", ");
-        message.channel.send('Users in lobby: ' + roleusers);
+        if (sweetrole) {
+            let roleusers = '';
+            message.guild.roles.get(sweetrole.id).members.map(m => roleusers += m.displayName + ", ");
+            message.channel.send('Users in lobby: ' + roleusers);
+        } else {
+            message.channel.send('Role not found for rolecall' + (tagID ? ' <@!' + tagID + '>' : '')).catch(console.error);
+        }
+    }
+    if (command === "leave") {
+        /*
+        let sweetrole = message.guild.roles.find("name", message.channel.name);
+        if (sweetrole) {
+
+            let role = reaction.message.guild.roles.find("name", arr[j].name);
+            let member = await reaction.message.guild.fetchMember(user.id);
+            member.removeRole(role).catch(console.error);
+        }*/
     }
 
     // Ignores messages not from "Admin" role

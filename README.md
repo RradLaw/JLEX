@@ -8,6 +8,7 @@ npm install discord.js
 ```
 Then edit line 6 of app.js, changing from "config2.json" to "config.json".
 Add your Discord bot API token (found [here](https://discordapp.com/developers/applications/me)) to the "token" field in config.json.
+To get a tag on error messages, change the "adminID" to your discord ID (found by turning discord developer option on, then copying ID).
 ## Run
 ```
 node app.js
@@ -37,3 +38,4 @@ Displays all users with the role channel-name.
 * Add !help dialogue
 * Fix custom emojis in reaction
 * Sort role call alphabetically
+* Delete trailing "," in rolecall
