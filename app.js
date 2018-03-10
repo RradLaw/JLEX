@@ -41,8 +41,14 @@ client.on("message", async message => {
         let sweetrole = message.guild.roles.find("name", message.channel.name);
         if (sweetrole) {
             let roleusers = '';
-            message.guild.roles.get(sweetrole.id).members.map(m => roleusers += m.displayName + ", ");
-            message.channel.send('Users in lobby: ' + roleusers);
+            let maparr = message.guild.roles.get(sweetrole.id).members.map(m => m.displayName);
+            maparr.sort(function (a, b) {
+                return a.toLowerCase().localeCompare(b.toLowerCase());
+            });
+            for (let i = 0; i < maparr.length; i++) {
+                roleusers += maparr[i] + ', '
+            }
+            message.channel.send('Users in lobby: ' + roleusers.substring(0, roleusers.length - 2)).catch(console.error);
         } else {
             message.channel.send('Role not found for rolecall' + (tagID ? ' <@!' + tagID + '>' : '')).catch(console.error);
         }

@@ -34,8 +34,5 @@ Displays all users with the role channel-name.
 ## TODO
 * Add team RSVPs to rolecall
 * Show un-RSVP'd users in rolecall
-* Add !leave function
 * Add !help dialogue
 * Fix custom emojis in reaction
-* Sort role call alphabetically
-* Delete trailing "," in rolecall
