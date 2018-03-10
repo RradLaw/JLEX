@@ -109,11 +109,9 @@ client.on("message", async message => {
                 message.channel.send('RIP ' + args[i] + ' exraid.');
             }
         }
-
     } else if (command === "blush") {
         message.delete().catch(O_o => { });
         message.channel.send(':blush:');
-
     } else if (command === "listexraids" || command === "listexraid") {
         message.delete().catch(O_o => { });
         let server = message.guild;
@@ -129,6 +127,35 @@ client.on("message", async message => {
                     await message.react(args[i]).catch(console.error);
                 }
             }).catch(console.error);
+    } else if (command === "team" || command === "teams") {
+        let teamMsg = await message.channel.fetchPinnedMessages();
+        await message.channel.fetchMessages();
+        teamMsg = teamMsg.array();
+        if (teamMsg.length < 3) {
+            message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
+            return;
+        }
+        let instinkCount = 0;
+
+        // best team
+        let mystakeCount = 0;
+
+        // bit of a stretch XD
+        let failorCount = 0;
+
+        for (let i = 0; i < teamMsg.length; i++) {
+            if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with") {
+                let rea = await message.channel.fetchMessage(teamMsg[i].id);
+                failorCount = await countTeamReacts(rea);
+            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with") {
+                let rea = await message.channel.fetchMessage(teamMsg[i].id);
+                instinkCount = await countTeamReacts(rea);
+            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with") {
+                let rea = await message.channel.fetchMessage(teamMsg[i].id);
+                mystakeCount = await countTeamReacts(rea);
+            }
+        }
+        message.channel.send("**RSVP Team Count**\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount).catch(console.error);
     }
 });
 
@@ -186,13 +213,57 @@ client.on('messageReactionRemove', async (reaction, user) => {
 
 async function welcomeMessage(c) {
     c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!')
-        .then(message => {
-            message.pin();
-        }).catch(console.error);
-    c.send('------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with');
-    c.send('------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with');
-    c.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with');
+        .catch(console.error);
+    c.send('------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with').then(message => {
+        message.pin();
+    }).catch(console.error);
+    c.send('------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with').then(message => {
+        message.pin();
+    }).catch(console.error);
+    c.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with').then(message => {
+        message.pin();
+    }).catch(console.error);
     c.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
+}
+
+async function countTeamReacts(rea) {
+    let counter = 0;
+    rea = rea.reactions.array();
+    for (let j = 0; j < rea.length; j++) {
+        switch (rea[j].emoji.name) {
+            case "1⃣":
+                counter += 1;
+                break;
+            case "2⃣":
+                counter += 2;
+                break;
+            case "3⃣":
+                counter += 3;
+                break;
+            case "4⃣":
+                counter += 4;
+                break;
+            case "5⃣":
+                counter += 5;
+                break;
+            case "6⃣":
+                counter += 6;
+                break;
+            case "7⃣":
+                counter += 7;
+                break;
+            case "8⃣":
+                counter += 8;
+                break;
+            case "9⃣":
+                counter += 9;
+                break;
+            case "🔟":
+                counter += 10;
+                break;
+        }
+    }
+    return counter;
 }
 
 client.login(config.token);
