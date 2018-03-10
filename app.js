@@ -232,34 +232,34 @@ async function countTeamReacts(rea) {
     for (let j = 0; j < rea.length; j++) {
         switch (rea[j].emoji.name) {
             case "1⃣":
-                counter += 1;
+                counter += 1 * rea[j].count;
                 break;
             case "2⃣":
-                counter += 2;
+                counter += 2 * rea[j].count;
                 break;
             case "3⃣":
-                counter += 3;
+                counter += 3 * rea[j].count;
                 break;
             case "4⃣":
-                counter += 4;
+                counter += 4 * rea[j].count;
                 break;
             case "5⃣":
-                counter += 5;
+                counter += 5 * rea[j].count;
                 break;
             case "6⃣":
-                counter += 6;
+                counter += 6 * rea[j].count;
                 break;
             case "7⃣":
-                counter += 7;
+                counter += 7 * rea[j].count;
                 break;
             case "8⃣":
-                counter += 8;
+                counter += 8 * rea[j].count;
                 break;
             case "9⃣":
-                counter += 9;
+                counter += 9 * rea[j].count;
                 break;
             case "🔟":
-                counter += 10;
+                counter += 10 * rea[j].count;
                 break;
         }
     }
