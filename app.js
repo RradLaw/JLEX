@@ -115,13 +115,13 @@ client.on("message", async message => {
         message.channel.send(':blush:');
 
     } else if (command === "listexraids" || command === "listexraid") {
-
+        message.delete().catch(O_o => { });
         let server = message.guild;
         let msg = 'React to add yourself to the exraid channels\n\n';
         let topic = '';
         for (let i = 0; i < args.length; i += 2) {
             topic = client.channels.find("name", args[i]);
-            msg += args[i + 1] + " : `" + topic.topic + "`\n\n";
+            msg += args[i + 1] + " : `" + topic.topic + "` <#" + topic.id + ">\n\n";
         }
         message.channel.send(msg)
             .then(async message => {
