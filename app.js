@@ -67,6 +67,7 @@ client.on("message", async message => {
             message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
             return;
         }
+        let rsvpUsers = [];
         let instinkCount = 0;
 
         // best team
@@ -74,20 +75,22 @@ client.on("message", async message => {
 
         // bit of a stretch XD
         let failorCount = 0;
-
         for (let i = 0; i < teamMsg.length; i++) {
             if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with") {
                 let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                failorCount = await countTeamReacts(rea);
+                [failorCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
             } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with") {
                 let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                instinkCount = await countTeamReacts(rea);
+                [instinkCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
             } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with") {
                 let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                mystakeCount = await countTeamReacts(rea);
+                [mystakeCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
             }
         }
-        message.channel.send("**RSVP Team Count**\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount).catch(console.error);
+        // Removes duplicate entries from rsvpUsers
+        rsvpUsers = Array.from(new Set(rsvpUsers));
+
+        message.channel.send("**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount).catch(console.error);
     } else if (command === "help" || command === "commands") {
         message.channel.send('`!leave` Removes the user from the lobby.\n`!rolecall` Shows all users assigned to lobby.\n`!teams` Shows the RSVPs for each team from the pinned posts.');
     }
@@ -230,44 +233,75 @@ async function welcomeMessage(c) {
     c.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
 }
 
-async function countTeamReacts(rea) {
+async function countTeamReacts(rea, rsvpUsers) {
     let counter = 0;
+    let usr = '';
     rea = rea.reactions.array();
     for (let j = 0; j < rea.length; j++) {
         switch (rea[j].emoji.name) {
             case "1⃣":
                 counter += 1 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "2⃣":
                 counter += 2 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "3⃣":
                 counter += 3 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "4⃣":
                 counter += 4 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "5⃣":
                 counter += 5 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "6⃣":
                 counter += 6 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "7⃣":
                 counter += 7 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "8⃣":
                 counter += 8 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "9⃣":
                 counter += 9 * rea[j].count;
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "🔟":
-                counter += 10 * rea[j].count;
+                counter += 10 * rea[j].count
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
                 break;
         }
     }
-    return counter;
+    return [counter, rsvpUsers];
 }
 
 client.login(config.token);
