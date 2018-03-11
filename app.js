@@ -59,6 +59,7 @@ client.on("message", async message => {
         if (sweetrole) {
             message.member.removeRole(sweetrole).then(message.channel.send('\:wave:')).catch(console.error);
         }
+        //broken
     } else if (command === "team" || command === "teams") {
         let teamMsg = await message.channel.fetchPinnedMessages();
         await message.channel.fetchMessages();
@@ -68,6 +69,7 @@ client.on("message", async message => {
             return;
         }
         let rsvpUsers = [];
+        let mems = [];
         let instinkCount = 0;
 
         // best team
@@ -88,9 +90,21 @@ client.on("message", async message => {
             }
         }
         // Removes duplicate entries from rsvpUsers
+        console.log(instinkCount, failorCount, mystakeCount);
         rsvpUsers = Array.from(new Set(rsvpUsers));
-
-        message.channel.send("**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount).catch(console.error);
+        let role = message.guild.roles.find("name", message.channel.name);
+        mems = role.members.filterArray(mems => {
+            if (rsvpUsers.indexOf(mems.id) < 0)
+                return mems.id;
+        });
+        let rsvpString = "**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount;
+        if (mems.length > 0) {
+            rsvpString += "\n\nUsers not RSVP'd: ";
+            for (let i = 0; i < mems.length; i++) {
+                rsvpString += mems[i].displayName + (i < mems.length - 1 ? ", " : "");
+            }
+        }
+        message.channel.send(rsvpString).catch(console.error);
     } else if (command === "help" || command === "commands") {
         message.channel.send('`!leave` Removes the user from the lobby.\n`!rolecall` Shows all users assigned to lobby.\n`!teams` Shows the RSVPs for each team from the pinned posts.');
     }
