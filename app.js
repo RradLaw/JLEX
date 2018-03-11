@@ -59,12 +59,45 @@ client.on("message", async message => {
         if (sweetrole) {
             message.member.removeRole(sweetrole).then(message.channel.send('\:wave:')).catch(console.error);
         }
+    } else if (command === "team" || command === "teams") {
+        let teamMsg = await message.channel.fetchPinnedMessages();
+        await message.channel.fetchMessages();
+        teamMsg = teamMsg.array();
+        if (teamMsg.length < 3) {
+            message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
+            return;
+        }
+        let instinkCount = 0;
+
+        // best team
+        let mystakeCount = 0;
+
+        // bit of a stretch XD
+        let failorCount = 0;
+
+        for (let i = 0; i < teamMsg.length; i++) {
+            if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with") {
+                let rea = await message.channel.fetchMessage(teamMsg[i].id);
+                failorCount = await countTeamReacts(rea);
+            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with") {
+                let rea = await message.channel.fetchMessage(teamMsg[i].id);
+                instinkCount = await countTeamReacts(rea);
+            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with") {
+                let rea = await message.channel.fetchMessage(teamMsg[i].id);
+                mystakeCount = await countTeamReacts(rea);
+            }
+        }
+        message.channel.send("**RSVP Team Count**\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount).catch(console.error);
+    } else if (command === "help" || command === "commands") {
+        message.channel.send('`!leave` Removes the user from the lobby.\n`!rolecall` Shows all users assigned to lobby.\n`!teams` Shows the RSVPs for each team from the pinned posts.');
     }
 
     // Ignores messages not from "Admin" role
     if (!message.member.roles.some(r => ["Admin"].includes(r.name))) return;
 
-    if (command === "exwelcome") {
+    if (command === "help" || command === "commands") {
+        message.channel.send('Admin commands:\n `!exwelcome` `!addexraid` `!deleteexraid` `!listexraids`\n Contact Jazzalaw for more info.');
+    } else if (command === "exwelcome") {
         message.delete().catch(O_o => { });
         welcomeMessage(message.channel);
     } else if (command === "addexraid") {
@@ -127,35 +160,6 @@ client.on("message", async message => {
                     await message.react(args[i]).catch(console.error);
                 }
             }).catch(console.error);
-    } else if (command === "team" || command === "teams") {
-        let teamMsg = await message.channel.fetchPinnedMessages();
-        await message.channel.fetchMessages();
-        teamMsg = teamMsg.array();
-        if (teamMsg.length < 3) {
-            message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
-            return;
-        }
-        let instinkCount = 0;
-
-        // best team
-        let mystakeCount = 0;
-
-        // bit of a stretch XD
-        let failorCount = 0;
-
-        for (let i = 0; i < teamMsg.length; i++) {
-            if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with") {
-                let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                failorCount = await countTeamReacts(rea);
-            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with") {
-                let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                instinkCount = await countTeamReacts(rea);
-            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with") {
-                let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                mystakeCount = await countTeamReacts(rea);
-            }
-        }
-        message.channel.send("**RSVP Team Count**\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount).catch(console.error);
     }
 });
 

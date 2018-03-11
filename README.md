@@ -36,5 +36,4 @@ Displays the count for each team. Numbers gathered from reactions to the pinned 
 
 ## TODO
 * Show un-RSVP'd users in team
-* Add !help dialogue
 * Fix custom emojis in reaction
