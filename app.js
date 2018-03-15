@@ -124,17 +124,18 @@ client.on("message", async message => {
         let raidDesc = args.join(' ') || raidName;
 
         server.createChannel(raidName, "text")
-            .then(channel => {
+            .then(async channel => {
                 channel.setParent(message.channel.parent);
 
-                welcomeMessage(channel);
 
                 let exRole = message.guild.roles.find("name", "ExRaids");
                 channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+
+
+                let erroneRole = message.guild.roles.find("name", "@everyone");
+                await channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).then(welcomeMessage(channel)).catch(console.error);
                 let modRole = message.guild.roles.find("name", "Mod");
                 channel.overwritePermissions(modRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
-                let erroneRole = message.guild.roles.find("name", "@everyone");
-                channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).catch(console.error);
 
                 server.createRole({ name: raidName })
                     .then(role => {
