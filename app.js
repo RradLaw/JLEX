@@ -153,6 +153,7 @@ client.on("message", async message => {
             message.channel.delete().catch(console.error);
         } else {
             for (let i = 0; i < args.length; i++) {
+                args[i] = args[i].toLowerCase();
                 let jackiechannel = message.guild.channels.find("name", args[i]);
                 let role = message.guild.roles.find("name", args[i]);
                 if (role) role.delete().catch(console.error);
