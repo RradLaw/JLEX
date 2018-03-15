@@ -90,13 +90,13 @@ client.on("message", async message => {
             }
         }
         // Removes duplicate entries from rsvpUsers
-        console.log(instinkCount, failorCount, mystakeCount);
         rsvpUsers = Array.from(new Set(rsvpUsers));
         let role = message.guild.roles.find("name", message.channel.name);
         mems = role.members.filterArray(mems => {
             if (rsvpUsers.indexOf(mems.id) < 0)
                 return mems.id;
         });
+        // TODO Fix bug where reactions do not show after 50 messages.
         let rsvpString = "**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount;
         if (mems.length > 0) {
             rsvpString += "\n\nUsers not RSVP'd: ";

@@ -38,5 +38,5 @@ Displays the count for each team. Numbers gathered from reactions to the pinned 
 Shows the commands available, with a short description. If called by an admin, shows the command names for admin only commands as well.
 
 ## TODO
-* Show un-RSVP'd users in team
+* Fix bug where team numbers do not show after 50 messages in channel.
 * Fix custom emojis in reaction
