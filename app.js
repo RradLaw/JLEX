@@ -99,7 +99,7 @@ client.on("message", async message => {
         // TODO Fix bug where reactions do not show after 50 messages.
         let rsvpString = "**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount;
         if (mems.length > 0) {
-            rsvpString += "\n\nUsers not RSVP'd: ";
+            rsvpString += "\n\nUsers without a team react: ";
             for (let i = 0; i < mems.length; i++) {
                 rsvpString += mems[i].displayName + (i < mems.length - 1 ? ", " : "");
             }
@@ -157,8 +157,12 @@ client.on("message", async message => {
                 let jackiechannel = message.guild.channels.find("name", args[i]);
                 let role = message.guild.roles.find("name", args[i]);
                 if (role) role.delete().catch(console.error);
-                jackiechannel.delete().catch(console.error);
-                message.channel.send('RIP ' + args[i] + ' exraid.');
+                if (jackiechannel) {
+                    jackiechannel.delete().catch(console.error);
+                    message.channel.send('RIP ' + args[i] + ' exraid.');
+                } else {
+                    message.channel.send('Cannot find channel' + args[i]);
+                }
             }
         }
     } else if (command === "blush") {
