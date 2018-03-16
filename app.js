@@ -51,7 +51,7 @@ client.on("message", async message => {
             }
             message.channel.send('Users in lobby: ' + roleusers.substring(0, roleusers.length - 2)).catch(console.error);
         } else {
-            message.channel.send('Role not found for rolecall' + (tagID ? ' <@!' + tagID + '>' : '')).catch(console.error);
+            message.channel.send('Role not found for rollcall' + (tagID ? ' <@!' + tagID + '>' : '')).catch(console.error);
         }
         // Removes user from the channel
     } else if (command === "leave") {
@@ -106,7 +106,7 @@ client.on("message", async message => {
         }
         message.channel.send(rsvpString).catch(console.error);
     } else if (command === "help" || command === "commands") {
-        message.channel.send('`!leave` Removes the user from the lobby.\n`!rolecall` Shows all users assigned to lobby.\n`!teams` Shows the RSVPs for each team from the pinned posts.');
+        message.channel.send('`!leave` Removes the user from the lobby.\n`!rollcall` Shows all users assigned to lobby.\n`!teams` Shows the RSVPs for each team from the pinned posts.');
     }
 
     // Ignores messages not from "Admin" role

@@ -28,7 +28,7 @@ Delete the channel "channel-name" and unassigns everyone with role "channel-name
 ##### !listexraids Channel-name emoji, Channel-name emoji, etc. 
 Outputs all current exraid channels and topics, allowing for emoji assignment of roles
 
-##### !rolecall or !rollcall
+##### !rollcall or !rolecall
 Displays all users with the role channel-name.
 
 ##### !team or !teams
