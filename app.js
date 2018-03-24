@@ -107,7 +107,10 @@ client.on("message", async message => {
         message.channel.send(rsvpString).catch(console.error);
     } else if (command === "help" || command === "commands") {
         message.channel.send('`!leave` Removes the user from the lobby.\n`!rollcall` Shows all users assigned to lobby.\n`!teams` Shows the RSVPs for each team from the pinned posts.');
+    } else if (command === "react" || command === "reacts") {
+        message.channel.send('Reactions on Mobile:\nScroll to the top of the channel, hold down on the message, tap on "Add Reactions", search for the number, and click on it.\nReactions on Desktop:\nScroll to the top of the channel, tap on the smiley face next to the message, then search for the number, and click on it.');
     }
+
 
     // Ignores messages not from "Admin" role
     if (!message.member.roles.some(r => ["Admin"].includes(r.name))) return;
