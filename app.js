@@ -259,6 +259,11 @@ async function countTeamReacts(rea, rsvpUsers) {
     rea = rea.reactions.array();
     for (let j = 0; j < rea.length; j++) {
         switch (rea[j].emoji.name) {
+            case "0⃣":
+                usr = await rea[j].fetchUsers().catch(console.error);
+                usr = usr.keyArray();
+                rsvpUsers = rsvpUsers.concat(usr);
+                break;
             case "1⃣":
                 counter += 1 * rea[j].count;
                 usr = await rea[j].fetchUsers().catch(console.error);
