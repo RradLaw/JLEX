@@ -240,8 +240,8 @@ client.on("message", async message => {
                         await message.react(regionalEmojis[i]).catch(console.error);
                     }
                 }).catch(console.error);
-            await message.channel.send('---------------------------------');
-            if (messageArray.length >= 20) {
+            if (messageArray.length > 20) {
+                await message.channel.send('---------------------------------');
                 message.channel.send(msg2)
                     .then(async message => {
                         for (let i = 20; i < messageArray.length; i++) {
