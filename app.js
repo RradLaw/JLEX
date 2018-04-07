@@ -186,6 +186,18 @@ client.on("message", async message => {
                     await message.react(args[i]).catch(console.error);
                 }
             }).catch(console.error);
+    } else if (command === "deletestarting" || command === "ds") {
+        if (args[0]) {
+            let delFlag = false;
+            let jackieChannels = (message.channel.parent.children).array();
+            for (let i = 0; i < jackieChannels.length; i++) {
+                if (args[0] === (jackieChannels[i].name).substring(0, args[0].length)) {
+                    let role = message.guild.roles.find("name", jackieChannels[i].name);
+                    if (role) role.delete().catch(console.error);
+                    (jackieChannels[i]).delete().catch(console.error);
+                }
+            }
+        }
     }
 });
 
