@@ -215,15 +215,13 @@ client.on("message", async message => {
             }
 
             let msg = 'React to add yourself to the exraid channels\n\n';
-            let msg2 = '\n\n\n';
+            let msg2 = '';
 
             for (let i = 0; i < messageArray.length; i++) {
                 if (i < 20) {
                     msg += `${regionalEmojis[i]} : \`${messageArray[i][0]}\` <#${messageArray[i][1]}>\n\n`;
-                } else if (i <= 26) {
-                    msg2 += `${regionalEmojis[i]} : \`${messageArray[i][0]}\` <#${messageArray[i][1]}>\n\n`;
                 } else if (i <= 37) {
-                    msg2 += `${regionalEmojis[i + 26]} : \`${messageArray[i][0]}\` <#${messageArray[i][1]}>\n\n`;
+                    msg2 += `${regionalEmojis[i]} : \`${messageArray[i][0]}\` <#${messageArray[i][1]}>\n\n`;
                 }
             }
 
@@ -286,7 +284,6 @@ client.on('messageReactionAdd', async (reaction, user) => {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
-        console.log();
         if (reaction.message.channel.name === 'ex-rsvp') {
             for (let i = 2; i < str.length; i += 2) {
                 emojis.push(str[i].substr(0, 2));
@@ -313,7 +310,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
-        if (str[0] === 'React to add yourself to the exraid channels') {
+        if (reaction.message.channel.name === 'ex-rsvp') {
             for (let i = 2; i < str.length; i += 2) {
                 emojis.push(str[i].substr(0, 2));
                 topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
