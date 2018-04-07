@@ -2,6 +2,9 @@ const Discord = require("discord.js");
 
 const client = new Discord.Client();
 
+const regionalEmojis = ['🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯', '🇰', '🇱', '🇲', '🇳', '🇴', '🇵', '🇶', '🇷', '🇸', '🇹', '🇺', '🇻', '🇼', '🇽', '🇾', '🇿', '0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
+const numberEmojis = [':zero:', ':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:', ':nine:', ':ten:'];
+
 // change this to ./config.json to get it to work
 const config = require("./config2.json");
 // config.token contains the bot's token
@@ -198,6 +201,60 @@ client.on("message", async message => {
                 }
             }
         }
+    } else if (command === "ls" || command === "liststarting") {
+        if (args[0]) {
+            message.delete().catch(O_o => { });
+            let jackieChannels = (message.channel.parent.children).array();
+
+            let messageArray = [];
+
+            for (let i = 0; i < jackieChannels.length; i++) {
+                if (args[0] === (jackieChannels[i].name).substring(0, args[0].length)) {
+                    messageArray.push([jackieChannels[i].topic, jackieChannels[i].id]);
+                }
+            }
+
+            let msg = 'React to add yourself to the exraid channels\n\n';
+            let msg2 = '\n\n\n';
+
+            for (let i = 0; i < messageArray.length; i++) {
+                if (i < 20) {
+                    msg += `${regionalEmojis[i]} : \`${messageArray[i][0]}\` <#${messageArray[i][1]}>\n\n`;
+                } else if (i <= 26) {
+                    msg2 += `${regionalEmojis[i]} : \`${messageArray[i][0]}\` <#${messageArray[i][1]}>\n\n`;
+                } else if (i <= 37) {
+                    msg2 += `${regionalEmojis[i + 26]} : \`${messageArray[i][0]}\` <#${messageArray[i][1]}>\n\n`;
+                }
+            }
+
+            await message.channel.send(msg)
+                .then(async message => {
+                    for (let i = 0; i < messageArray.length && i < 20; i++) {
+                        await message.react(regionalEmojis[i]).catch(console.error);
+                    }
+                }).catch(console.error);
+            await message.channel.send('---------------------------------');
+            if (messageArray.length >= 20) {
+                message.channel.send(msg2)
+                    .then(async message => {
+                        for (let i = 20; i < messageArray.length; i++) {
+                            await message.react(regionalEmojis[i]).catch(console.error);
+                        }
+                    }).catch(console.error);
+            }
+
+        }
+
+
+        /*
+                let server = message.guild;
+                let msg = 'React to add yourself to the exraid channels\n\n';
+                let topic = '';
+                for (let i = 0; i < args.length; i += 2) {
+                    topic = client.channels.find("name", args[i]);
+                    msg += args[i + 1] + " : `" + topic.topic + "` <#" + topic.id + ">\n\n";
+                }*/
+
     } else if (command === "addmany") {
         let server = message.guild;
 
@@ -229,7 +286,8 @@ client.on('messageReactionAdd', async (reaction, user) => {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
-        if (str[0] === 'React to add yourself to the exraid channels') {
+        console.log();
+        if (reaction.message.channel.name === 'ex-rsvp') {
             for (let i = 2; i < str.length; i += 2) {
                 emojis.push(str[i].substr(0, 2));
                 topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
