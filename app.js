@@ -198,6 +198,29 @@ client.on("message", async message => {
                 }
             }
         }
+    } else if (command === "addmany") {
+        let server = message.guild;
+
+        for (let i = 0; i < args[0]; i++) {
+            let raidName = 'exraid' + Math.floor(Math.random() * 10000);
+            let raidDesc = `topic for ${raidName}`;
+
+            server.createChannel(raidName, "text")
+                .then(async channel => {
+                    channel.setParent(message.channel.parent);
+
+                    let exRole = message.guild.roles.find("name", "ExRaids");
+                    channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+
+                    server.createRole({ name: raidName })
+                        .then(role => {
+                            channel.overwritePermissions(role, { READ_MESSAGES: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
+                        }).catch(console.error);
+
+                    channel.setTopic(raidDesc).catch(console.error);
+
+                });
+        }
     }
 });
 
@@ -334,7 +357,7 @@ async function countTeamReacts(rea, rsvpUsers) {
                 rsvpUsers = rsvpUsers.concat(usr);
                 break;
             case "🔟":
-                counter += 10 * rea[j].count
+                counter += 10 * rea[j].count;
                 usr = await rea[j].fetchUsers().catch(console.error);
                 usr = usr.keyArray();
                 rsvpUsers = rsvpUsers.concat(usr);
