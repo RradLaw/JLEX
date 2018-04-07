@@ -214,6 +214,15 @@ client.on("message", async message => {
                 }
             }
 
+            messageArray.sort(function (a, b) {
+                if (a[0] === b[0]) {
+                    return 0;
+                }
+                else {
+                    return (a[0] < b[0]) ? -1 : 1;
+                }
+            });
+
             let msg = 'React to add yourself to the exraid channels\n\n';
             let msg2 = '';
 
@@ -242,17 +251,6 @@ client.on("message", async message => {
             }
 
         }
-
-
-        /*
-                let server = message.guild;
-                let msg = 'React to add yourself to the exraid channels\n\n';
-                let topic = '';
-                for (let i = 0; i < args.length; i += 2) {
-                    topic = client.channels.find("name", args[i]);
-                    msg += args[i + 1] + " : `" + topic.topic + "` <#" + topic.id + ">\n\n";
-                }*/
-
     } else if (command === "addmany") {
         let server = message.guild;
 
