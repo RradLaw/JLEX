@@ -254,18 +254,18 @@ client.on('messageReactionRemove', async (reaction, user) => {
 });
 
 async function welcomeMessage(c) {
-    c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!')
+    c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!\n------')
         .catch(console.error);
-    c.send('------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with').then(message => {
+    c.send('Please react to this message with the number emoji of MYSTIC accounts you will be raiding with\n------').then(message => {
         message.pin();
     }).catch(console.error);
-    c.send('------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with').then(message => {
+    c.send('Please react to this message with the number emoji of VALOR accounts you will be raiding with\n------').then(message => {
         message.pin();
     }).catch(console.error);
-    c.send('------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with').then(message => {
+    c.send('Please react to this message with the number emoji of INSTINCT accounts you will be raiding with\n------').then(message => {
         message.pin();
     }).catch(console.error);
-    c.send('------\n\n*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*');
+    c.send('*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*\n\nTo add a reaction on mobile: long press on the message, click on "Add Reaction", search for the number with the top bar(e.g. "two"), then select it.\nTo add a reaction on desktop: click on the smiley face to the right of the message, search for the number with the search bar (e.g. "three"), then select it.');
 }
 
 async function countTeamReacts(rea, rsvpUsers) {
