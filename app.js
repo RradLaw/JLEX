@@ -3,7 +3,6 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 
 const regionalEmojis = ['🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯', '🇰', '🇱', '🇲', '🇳', '🇴', '🇵', '🇶', '🇷', '🇸', '🇹', '🇺', '🇻', '🇼', '🇽', '🇾', '🇿', '0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
-const numberEmojis = [':zero:', ':one:', ':two:', ':three:', ':four:', ':five:', ':six:', ':seven:', ':eight:', ':nine:', ':ten:'];
 
 // change this to ./config.json to get it to work
 const config = require("./config2.json");
@@ -224,7 +223,7 @@ client.on("message", async message => {
             });
 
             let msg = 'React to add yourself to the exraid channels\n\n';
-            let msg2 = '';
+            let msg2 = '---------------------------------\n\n';
 
             for (let i = 0; i < messageArray.length; i++) {
                 if (i < 20) {
@@ -241,7 +240,6 @@ client.on("message", async message => {
                     }
                 }).catch(console.error);
             if (messageArray.length > 20) {
-                await message.channel.send('---------------------------------');
                 message.channel.send(msg2)
                     .then(async message => {
                         for (let i = 20; i < messageArray.length; i++) {
