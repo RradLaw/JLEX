@@ -69,6 +69,9 @@ client.on("message", async message => {
         if (teamMsg.length < 3) {
             message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
             return;
+        } else if (message.channel.messages.size >= 50) {
+            message.channel.send('There are too many messages in the channel check ¯\\_(ツ)_/¯');
+            return
         }
         let rsvpUsers = [];
         let mems = [];
