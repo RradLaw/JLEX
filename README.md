@@ -28,14 +28,20 @@ Delete the channel "channel-name" and unassigns everyone with role "channel-name
 ##### !listexraids Channel-name emoji, Channel-name emoji, etc. 
 Outputs all current exraid channels and topics, allowing for emoji assignment of roles
 
-##### !rollcall or !rolecall
+##### !rollcall (or !rolecall)
 Displays all users with the role channel-name.
 
-##### !team or !teams
+##### !team (or !teams)
 Displays the count for each team. Numbers gathered from reactions to the pinned posts.
 
-##### !help or !commands
+##### !help (or !commands)
 Shows the commands available, with a short description. If called by an admin, shows the command names for admin only commands as well.
+
+##### !liststarting (or !ls) Channel-Substring
+Lists all channels starting with "Channel-substring". Similar to !listexraids command.
+
+##### !deletestarting (or !ds) Channel-Substring
+Deletes all channels/roles starting with "Channel-Substring".
 
 ## TODO
 * Fix bug where team numbers do not show after 50 messages in channel.

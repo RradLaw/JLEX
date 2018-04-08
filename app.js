@@ -118,7 +118,7 @@ client.on("message", async message => {
     if (!message.member.roles.some(r => ["Admin"].includes(r.name))) return;
 
     if (command === "help" || command === "commands") {
-        message.channel.send('Admin commands:\n `!exwelcome` `!addexraid` `!deleteexraid` `!listexraids`\n Contact Jazzalaw for more info.');
+        message.channel.send('Admin commands:\n `!exwelcome` `!addexraid` `!deleteexraid` `!listexraids` `!deletestarting` `!liststarting`\n Contact Jazzalaw for more info.');
     } else if (command === "exwelcome") {
         message.delete().catch(O_o => { });
         welcomeMessage(message.channel);
