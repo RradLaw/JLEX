@@ -97,10 +97,12 @@ client.on("message", async message => {
         // Removes duplicate entries from rsvpUsers
         rsvpUsers = Array.from(new Set(rsvpUsers));
         let role = message.guild.roles.find("name", message.channel.name);
-        mems = role.members.filterArray(mems => {
-            if (rsvpUsers.indexOf(mems.id) < 0)
-                return mems.id;
-        });
+        if (role) {
+            mems = role.members.filterArray(mems => {
+                if (rsvpUsers.indexOf(mems.id) < 0)
+                    return mems.id;
+            }).catch(console.error);
+        }
         // TODO Fix bug where reactions do not show after 50 messages.
         let rsvpString = "**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount;
         if (mems.length > 0) {
