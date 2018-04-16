@@ -83,13 +83,13 @@ client.on("message", async message => {
         // bit of a stretch XD
         let failorCount = 0;
         for (let i = 0; i < teamMsg.length; i++) {
-            if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of VALOR accounts you will be raiding with") {
+            if (teamMsg[i].content === "Please react to this message with the number emoji of VALOR accounts you will be raiding with\n------") {
                 let rea = await message.channel.fetchMessage(teamMsg[i].id);
                 [failorCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
-            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of INSTINCT accounts you will be raiding with") {
+            } else if (teamMsg[i].content === "Please react to this message with the number emoji of INSTINCT accounts you will be raiding with\n------") {
                 let rea = await message.channel.fetchMessage(teamMsg[i].id);
                 [instinkCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
-            } else if (teamMsg[i].content === "------\nPlease react to this message with the number emoji of MYSTIC accounts you will be raiding with") {
+            } else if (teamMsg[i].content === "Please react to this message with the number emoji of MYSTIC accounts you will be raiding with\n------") {
                 let rea = await message.channel.fetchMessage(teamMsg[i].id);
                 [mystakeCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
             }
@@ -99,9 +99,10 @@ client.on("message", async message => {
         let role = message.guild.roles.find("name", message.channel.name);
         if (role) {
             mems = role.members.filterArray(mems => {
-                if (rsvpUsers.indexOf(mems.id) < 0)
+                if (rsvpUsers.indexOf(mems.id) < 0) {
                     return mems.id;
-            }).catch(console.error);
+                }
+            });
         }
         // TODO Fix bug where reactions do not show after 50 messages.
         let rsvpString = "**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount;
