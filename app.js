@@ -154,8 +154,7 @@ client.on("message", async message => {
                     }).catch(console.error);
 
                 channel.setTopic(raidDesc).catch(console.error);
-
-                message.channel.send("Exraid " + raidName + " created.");
+                message.channel.send(`Exraid ${raidName} created (${message.channel.parent.children.size})`);
             });
     } else if (command === "deleteexraid" || command === "deleteexraids") {
         if (args.length === 0) {
