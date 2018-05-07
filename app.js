@@ -131,31 +131,36 @@ client.on("message", async message => {
     } else if (command === "addexraid") {
         let server = message.guild;
 
-        let raidName = args.shift() || 'exraid' + Math.floor(Math.random() * 10000);
-        let raidDesc = args.join(' ') || raidName;
+        message.content.split(/\r?\n/).forEach(function (element) {
+            const args = element.slice(config.prefix.length).trim().split(/ +/g);
+            const command = args.shift().toLowerCase();
 
-        server.createChannel(raidName, "text")
-            .then(async channel => {
-                channel.setParent(message.channel.parent);
+            let raidName = args.shift() || 'exraid' + Math.floor(Math.random() * 10000);
+            let raidDesc = args.join(' ') || raidName;
+
+            server.createChannel(raidName, "text")
+                .then(async channel => {
+                    channel.setParent(message.channel.parent);
 
 
-                let exRole = message.guild.roles.find("name", "ExRaids");
-                channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+                    let exRole = message.guild.roles.find("name", "ExRaids");
+                    channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
 
 
-                let erroneRole = message.guild.roles.find("name", "@everyone");
-                await channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).then(welcomeMessage(channel)).catch(console.error);
-                let modRole = message.guild.roles.find("name", "Mod");
-                channel.overwritePermissions(modRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+                    let erroneRole = message.guild.roles.find("name", "@everyone");
+                    await channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).then(welcomeMessage(channel)).catch(console.error);
+                    let modRole = message.guild.roles.find("name", "Mod");
+                    channel.overwritePermissions(modRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
 
-                server.createRole({ name: raidName })
-                    .then(role => {
-                        channel.overwritePermissions(role, { READ_MESSAGES: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
-                    }).catch(console.error);
+                    server.createRole({ name: raidName })
+                        .then(role => {
+                            channel.overwritePermissions(role, { READ_MESSAGES: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
+                        }).catch(console.error);
 
-                channel.setTopic(raidDesc).catch(console.error);
-                message.channel.send(`Exraid ${raidName} created (${message.channel.parent.children.size})`);
-            });
+                    channel.setTopic(raidDesc).catch(console.error);
+                    message.channel.send(`Exraid ${raidName} created (${message.channel.parent.children.size})`);
+                });
+        });
     } else if (command === "deleteexraid" || command === "deleteexraids") {
         if (args.length === 0) {
             let role = message.guild.roles.find("name", message.channel.name);
