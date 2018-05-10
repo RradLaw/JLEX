@@ -40,7 +40,7 @@ client.on("message", async message => {
     const command = args.shift().toLowerCase();
 
     // Outputs users with a role in the channel. Sorts them alphabetically.
-    if (command === "rolecall" || command === "rollcall") {
+    if (command === 'rolecall' || command === 'rollcall' || command === 'roll call' || command === 'role call') {
         let sweetrole = message.guild.roles.find("name", message.channel.name);
         if (sweetrole) {
             let roleusers = '';
