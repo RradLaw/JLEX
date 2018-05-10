@@ -48,4 +48,4 @@ Deletes all channels/roles starting with "Channel-Substring".
 * Fix custom emojis in reaction
 * Fix bug where newly created channels cannot be listed without a bot restart
 * Fix bug where total channels in category does not update
-* Allow multi-line addexraid commands
+* Remove user reactions (rsvp list + team rsvp) when !leave's
