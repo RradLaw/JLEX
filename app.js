@@ -159,7 +159,12 @@ client.on("message", async message => {
                         }).catch(console.error);
 
                     channel.setTopic(raidDesc).catch(console.error);
-                    message.channel.send(`Exraid ${raidName} created (${message.channel.parent.children.size})`);
+                    const channelArr = message.client.channels.array();
+                    let counter = 0;
+                    for(let i=0;i<channelArr.length;i++) {
+                        if(channelArr[i].parent && channelArr[i].parent.id === message.channel.parent.id) counter++;
+                    }
+                    message.channel.send(`Exraid ${raidName} created (${counter})`);
                 });
         });
     } else if (command === "deleteexraid" || command === "deleteexraids") {
@@ -215,7 +220,7 @@ client.on("message", async message => {
         if (args[0]) {
             message.delete().catch(O_o => { });
             let jackieChannels = (message.channel.parent.children).array();
-
+            
             let messageArray = [];
 
             for (let i = 0; i < jackieChannels.length; i++) {
