@@ -46,6 +46,4 @@ Deletes all channels/roles starting with "Channel-Substring".
 ## TODO
 * Fix bug where team numbers do not show after 50 messages in channel
 * Fix custom emojis in reaction
-* Fix bug where newly created channels cannot be listed without a bot restart
-* Fix bug where total channels in category does not update
 * Remove user reactions (rsvp list + team rsvp) when !leave's

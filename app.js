@@ -207,7 +207,13 @@ client.on("message", async message => {
     } else if (command === "deletestarting" || command === "ds") {
         if (args[0]) {
             let delFlag = false;
-            let jackieChannels = (message.channel.parent.children).array();
+            
+            let jackieChannels = [];
+            const channelArr = message.client.channels.array();
+            for(let i=0;i<channelArr.length;i++) {
+                if(channelArr[i].parent && channelArr[i].parent.id === message.channel.parent.id) jackieChannels.push(channelArr[i]);
+            }
+
             for (let i = 0; i < jackieChannels.length; i++) {
                 if (args[0] === (jackieChannels[i].name).substring(0, args[0].length)) {
                     let role = message.guild.roles.find("name", jackieChannels[i].name);
@@ -219,8 +225,13 @@ client.on("message", async message => {
     } else if (command === "ls" || command === "liststarting") {
         if (args[0]) {
             message.delete().catch(O_o => { });
-            let jackieChannels = (message.channel.parent.children).array();
             
+            let jackieChannels = [];
+            const channelArr = message.client.channels.array();
+            for(let i=0;i<channelArr.length;i++) {
+                if(channelArr[i].parent && channelArr[i].parent.id === message.channel.parent.id) jackieChannels.push(channelArr[i]);
+            }
+
             let messageArray = [];
 
             for (let i = 0; i < jackieChannels.length; i++) {
