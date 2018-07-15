@@ -63,7 +63,6 @@ client.on("message", async message => {
         }
         //broken
     } else if (command === "team" || command === "teams") {
-        console.log(message.channel);
         let teamMsg = await message.channel.fetchPinnedMessages();
         await message.channel.fetchMessages({limit: 100});
         teamMsg = teamMsg.array();
