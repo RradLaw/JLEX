@@ -63,13 +63,14 @@ client.on("message", async message => {
         }
         //broken
     } else if (command === "team" || command === "teams") {
+        console.log(message.channel);
         let teamMsg = await message.channel.fetchPinnedMessages();
         await message.channel.fetchMessages({limit: 100});
         teamMsg = teamMsg.array();
         if (teamMsg.length < 3) {
             message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
             return;
-        } else if (message.channel.messages.size >= 50) {
+        } else if (message.channel.messages.size >= 100) {
             message.channel.send('There are too many messages in the channel check ¯\\_(ツ)_/¯');
             return
         }
@@ -104,7 +105,7 @@ client.on("message", async message => {
                 }
             });
         }
-        // TODO Fix bug where reactions do not show after 50 messages.
+        // TODO Fix bug where reactions do not show after 100 messages.
         let rsvpString = "**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount;
         if (mems.length > 0) {
             rsvpString += "\n\nUsers without a team react: ";
