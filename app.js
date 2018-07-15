@@ -64,7 +64,7 @@ client.on("message", async message => {
         //broken
     } else if (command === "team" || command === "teams") {
         let teamMsg = await message.channel.fetchPinnedMessages();
-        await message.channel.fetchMessages();
+        await message.channel.fetchMessages({limit: 100});
         teamMsg = teamMsg.array();
         if (teamMsg.length < 3) {
             message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
