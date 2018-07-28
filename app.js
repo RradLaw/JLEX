@@ -306,7 +306,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
-        if (reaction.message.channel.name === 'ex-rsvp') {
+        if (reaction.message.channel.name === 'ex-rsvp' || reaction.message.channel.name === 'ex-rsvp2') {
             for (let i = 2; i < str.length; i += 2) {
                 emojis.push(str[i].substr(0, 2));
                 topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
@@ -332,7 +332,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
         let str = reaction.message.content.split("\n");
         let topics = [];
         let emojis = [];
-        if (reaction.message.channel.name === 'ex-rsvp') {
+        if (reaction.message.channel.name === 'ex-rsvp' || reaction.message.channel.name === 'ex-rsvp2') {
             for (let i = 2; i < str.length; i += 2) {
                 emojis.push(str[i].substr(0, 2));
                 topics.push(str[i].substring(6, str[i].indexOf("`", 6)));

@@ -44,6 +44,6 @@ Lists all channels starting with "Channel-substring". Similar to !listexraids co
 Deletes all channels/roles starting with "Channel-Substring".
 
 ## TODO
-* Fix bug where team numbers do not show after 50 messages in channel
-* Fix custom emojis in reaction
+* Fix bug where team numbers do not show after 100 messages in channel
+* Add custom emojis in reaction
 * Remove user reactions (rsvp list + team rsvp) when !leave's
