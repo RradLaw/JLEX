@@ -18,7 +18,7 @@ client.on("ready", () => {
     for (let i = 0; i < guilds.length; i++) {
         let gChannels = guilds[i].channels.array();
         for (let j = 0; j < gChannels.length; j++) {
-            if (gChannels[j].name === "ex-rsvp") {
+            if (gChannels[j].name === "ex-rsvp" || gChannels[j].name === "ex-rsvp2" ) {
                 gChannels[j].fetchMessages().catch(console.error);
             }
         }
