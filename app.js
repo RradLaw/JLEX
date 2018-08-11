@@ -149,7 +149,7 @@ client.on("message", async message => {
 
                     let erroneRole = message.guild.roles.find("name", "@everyone");
                     await channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).then(welcomeMessage(channel)).catch(console.error);
-                    let modRole = message.guild.roles.find("name", "Mod");
+                    let modRole = message.guild.roles.find("name", "Senior Moderator");
                     channel.overwritePermissions(modRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
 
                     server.createRole({ name: raidName })
