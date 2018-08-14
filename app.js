@@ -444,4 +444,6 @@ async function countTeamReacts(rea, rsvpUsers) {
     return [counter, rsvpUsers];
 }
 
+client.on('error', console.error);
+
 client.login(config.token);
