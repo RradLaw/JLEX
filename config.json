@@ -1,5 +1,7 @@
 {
     "token": "ACCESS_TOKEN",
     "prefix": "!",
-    "adminID": "DISCORD_ID_OF_ADMIN"
+    "adminID": "DISCORD_ID_OF_ADMIN",
+    "passChannel": "CHANNEL_FOR_READING_PASSES",
+    "testURLs": ["LIST_OF_URLS_TO_TEST"]
 }

@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 
 const regionalEmojis = ['🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯', '🇰', '🇱', '🇲', '🇳', '🇴', '🇵', '🇶', '🇷', '🇸', '🇹', '🇺', '🇻', '🇼', '🇽', '🇾', '🇿', '0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
+const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
 // change this to ./config.json to get it to work
 const config = require("./config2.json");
@@ -13,6 +14,7 @@ const tagID = config.adminID === "DISCORD_ID_OF_ADMIN" ? null : config.adminID;
 
 client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
+    //tesseractImg('https://cdn.discordapp.com/attachments/500205022001496064/500504745673490432/Screenshot_2018-10-12-17-07-19.png');//a.url);
     client.user.setActivity(`Pokemon Go`);
     let guilds = client.guilds.array();
     for (let i = 0; i < guilds.length; i++) {
@@ -30,6 +32,14 @@ client.on("message", async message => {
     // This event will run on every single message received, from any channel or DM.
     // Ignores messages from all bots
     if (message.author.bot) return;
+
+    if (message.channel.id === config.passChannel) {
+        //message.attachments.every(async function(a) {
+            message.channel.send('Processing Pass');
+            testPasses(message.channel);
+            //tesseractImg('https://cdn.discordapp.com/attachments/500205022001496064/500504745673490432/Screenshot_2018-10-12-17-07-19.png');//a.url);
+        //});
+    }
 
     // Ignores messages without prefix
     if (message.content.indexOf(config.prefix) !== 0) return;
@@ -443,5 +453,60 @@ async function countTeamReacts(rea, rsvpUsers) {
     }
     return [counter, rsvpUsers];
 }
+
+var Tesseract = require('tesseract.js')
+var request = require('request')
+var fs = require('fs')
+var filename = 'pic'
+let filenameCounter = 0;
+let filenameext = '.png';
+function tesseractImg(url,chan) {
+    var writeFile = fs.createWriteStream(filename+(++filenameCounter)+filenameext);
+    request(url).pipe(writeFile).on('close', function() {
+        Tesseract.recognize(writeFile.path)
+          .catch(err => console.error(err))
+          .then(function (result) {
+            let str = result.text.replace(/\n/g, " ");
+            str = str.replace("!  P", "! P");
+            let s1 = str.indexOf("previous victory at ");
+            let s2 = str.indexOf("! Please visit");
+            if(s1 === -1 || s2 === -1) {
+                chan.send((++testCounter)+'\n'+url+'\nCan\'t read pass');
+                console.log(testCounter+'\n'+url+' fail '+(++failCount));
+                console.log(str);
+                return;
+            }
+            let s3 = str.substr(s1+20,s2-s1-20);
+            for(let i=0;i<monthNames.length;i++) {
+                if(str.indexOf(monthNames[i]) !== -1) {
+                    let details = str.substr(str.indexOf(monthNames[i]),monthNames[i].length + 50);
+                    if(details.lastIndexOf(" PM ")>0) {
+                        details = details.substr(0,details.lastIndexOf(" PM ")+4);
+                    } else if (details.lastIndexOf(" AM ")) {
+                        details = details.substr(0,details.lastIndexOf(" AM ")+4);
+                    } else {
+                        console.log("Can't find date/time");
+                        return;
+                    }
+                    chan.send((++testCounter)+'\n'+s3+'\n'+details);
+                    return;
+                    //console.log(details);
+                }
+            }
+          })
+      });
+      return;
+}
+
+let testCounter = 0;
+let failCount = 0;
+
+async function testPasses(chan) {
+    for(let i=4;i<config.testURLs.length;i++) {
+        tesseractImg(config.testURLs[i],chan);
+    }
+}
+
+client.on('error', console.error);
 
 client.login(config.token);

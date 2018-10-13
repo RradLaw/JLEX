@@ -5,6 +5,8 @@ Discord bot for assigning roles with emojis and creating/managing channels.
 ## Install
 ```
 npm install discord.js
+npm install tesseract.js --save
+npm install require
 ```
 Then edit line 6 of app.js, changing from "config2.json" to "config.json".
 Add your Discord bot API token (found [here](https://discordapp.com/developers/applications/me)) to the "token" field in config.json.

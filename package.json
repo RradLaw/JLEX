@@ -1,0 +1,12 @@
+{
+  "name": "jlex",
+  "version": "0.0.1",
+  "description": "Discord bot for managing ex raids",
+  "dependencies": {
+  },
+  "main": "app.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RradLaw/JLEX.git"
+  }
+}
