@@ -3,3 +3,4 @@ package-lock.json
 config.json
 config2.json
 .vscode
+passes/
