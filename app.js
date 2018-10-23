@@ -458,10 +458,11 @@ var Tesseract = require('tesseract.js')
 var request = require('request')
 var fs = require('fs')
 var filename = 'pic'
+let passfolder = 'passes/';
 let filenameCounter = 0;
 let filenameext = '.png';
 function tesseractImg(url,chan) {
-    var writeFile = fs.createWriteStream(filename+(++filenameCounter)+filenameext);
+    var writeFile = fs.createWriteStream(passfolder+filename+(++filenameCounter)+filenameext);
     request(url).pipe(writeFile).on('close', function() {
         Tesseract.recognize(writeFile.path)
           .catch(err => console.error(err))
@@ -502,7 +503,7 @@ let testCounter = 0;
 let failCount = 0;
 
 async function testPasses(chan) {
-    for(let i=4;i<config.testURLs.length;i++) {
+    for(let i=0;i<config.testURLs.length;i++) {
         tesseractImg(config.testURLs[i],chan);
     }
 }
