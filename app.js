@@ -1,4 +1,7 @@
 const Discord = require("discord.js");
+let Tesseract = require('tesseract.js');
+let request = require('request');
+let fs = require('fs');
 
 const client = new Discord.Client();
 
@@ -14,8 +17,7 @@ const tagID = config.adminID === "DISCORD_ID_OF_ADMIN" ? null : config.adminID;
 
 client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
-    //tesseractImg('https://cdn.discordapp.com/attachments/500205022001496064/500504745673490432/Screenshot_2018-10-12-17-07-19.png');//a.url);
-    client.user.setActivity(`Pokemon Go`);
+    client.user.setActivity(`Digimon Go`);
     let guilds = client.guilds.array();
     for (let i = 0; i < guilds.length; i++) {
         let gChannels = guilds[i].channels.array();
@@ -34,11 +36,11 @@ client.on("message", async message => {
     if (message.author.bot) return;
 
     if (message.channel.id === config.passChannel) {
-        //message.attachments.every(async function(a) {
+        message.attachments.every(async function(a) {
             message.channel.send('Processing Pass');
-            testPasses(message.channel);
-            //tesseractImg('https://cdn.discordapp.com/attachments/500205022001496064/500504745673490432/Screenshot_2018-10-12-17-07-19.png');//a.url);
-        //});
+            //testPasses(message.channel);
+            tesseractImg(a.url,message.channel);
+        });
     }
 
     // Ignores messages without prefix
@@ -51,7 +53,7 @@ client.on("message", async message => {
 
     // Outputs users with a role in the channel. Sorts them alphabetically.
     if (command === 'rolecall' || command === 'rollcall' || args[0] === 'call' && (command === 'roll' || command === 'role')) {
-        let sweetrole = message.guild.roles.find("name", message.channel.name);
+        let sweetrole = message.guild.roles.find(x => x.name, message.channel.name);
         if (sweetrole) {
             let roleusers = '';
             let maparr = message.guild.roles.get(sweetrole.id).members.map(m => m.displayName);
@@ -67,7 +69,7 @@ client.on("message", async message => {
         }
         // Removes user from the channel
     } else if (command === "leave") {
-        let sweetrole = message.guild.roles.find("name", message.channel.name);
+        let sweetrole = message.guild.roles.find(x => x.name, message.channel.name);
         if (sweetrole) {
             message.member.removeRole(sweetrole).then(message.channel.send('\:wave:')).catch(console.error);
         }
@@ -106,7 +108,7 @@ client.on("message", async message => {
         }
         // Removes duplicate entries from rsvpUsers
         rsvpUsers = Array.from(new Set(rsvpUsers));
-        let role = message.guild.roles.find("name", message.channel.name);
+        let role = message.guild.roles.find(x => x.name, message.channel.name);
         if (role) {
             mems = role.members.filterArray(mems => {
                 if (rsvpUsers.indexOf(mems.id) < 0) {
@@ -153,13 +155,13 @@ client.on("message", async message => {
                     channel.setParent(message.channel.parent);
 
 
-                    let exRole = message.guild.roles.find("name", "ExRaids");
+                    let exRole = message.guild.roles.find(x => x.name, "ExRaids");
                     channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
 
 
-                    let erroneRole = message.guild.roles.find("name", "@everyone");
+                    let erroneRole = message.guild.roles.find(x => x.name, "@everyone");
                     await channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).then(welcomeMessage(channel)).catch(console.error);
-                    let modRole = message.guild.roles.find("name", "Senior Moderator");
+                    let modRole = message.guild.roles.find(x => x.name, "Senior Moderator");
                     channel.overwritePermissions(modRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
 
                     server.createRole({ name: raidName })
@@ -174,18 +176,19 @@ client.on("message", async message => {
                         if(channelArr[i].parent && channelArr[i].parent.id === message.channel.parent.id) counter++;
                     }
                     message.channel.send(`Exraid ${raidName} created (${counter})`);
-                });
+                })
+                .catch(console.error);
         });
     } else if (command === "deleteexraid" || command === "deleteexraids") {
         if (args.length === 0) {
-            let role = message.guild.roles.find("name", message.channel.name);
+            let role = message.guild.roles.find(x => x.name, message.channel.name);
             if (role) role.delete().catch(console.error);
             message.channel.delete().catch(console.error);
         } else {
             for (let i = 0; i < args.length; i++) {
                 args[i] = args[i].toLowerCase();
-                let jackiechannel = message.guild.channels.find("name", args[i]);
-                let role = message.guild.roles.find("name", args[i]);
+                let jackiechannel = message.guild.channels.find(x => x.name, args[i]);
+                let role = message.guild.roles.find(x => x.name, args[i]);
                 if (role) role.delete().catch(console.error);
                 if (jackiechannel) {
                     jackiechannel.delete().catch(console.error);
@@ -204,7 +207,7 @@ client.on("message", async message => {
         let msg = 'React to add yourself to the exraid channels\n\n';
         let topic = '';
         for (let i = 0; i < args.length; i += 2) {
-            topic = client.channels.find("name", args[i]);
+            topic = client.channels.find(x => x.name, args[i]);
             msg += args[i + 1] + " : `" + topic.topic + "` <#" + topic.id + ">\n\n";
         }
         message.channel.send(msg)
@@ -225,7 +228,7 @@ client.on("message", async message => {
 
             for (let i = 0; i < jackieChannels.length; i++) {
                 if (args[0] === (jackieChannels[i].name).substring(0, args[0].length)) {
-                    let role = message.guild.roles.find("name", jackieChannels[i].name);
+                    let role = message.guild.roles.find(x => x.name, jackieChannels[i].name);
                     if (role) role.delete().catch(console.error);
                     (jackieChannels[i]).delete().catch(console.error);
                 }
@@ -296,7 +299,7 @@ client.on("message", async message => {
                 .then(async channel => {
                     channel.setParent(message.channel.parent);
 
-                    let exRole = message.guild.roles.find("name", "ExRaids");
+                    let exRole = message.guild.roles.find(x => x.name, "ExRaids");
                     channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
 
                     server.createRole({ name: raidName })
@@ -326,7 +329,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     let arr = reaction.message.channel.parent.children.array();
                     for (let j = 0; j < arr.length; j++) {
                         if (arr[j].topic === topics[i]) {
-                            let role = reaction.message.guild.roles.find("name", arr[j].name);
+                            let role = reaction.message.guild.roles.find(x => x.name, arr[j].name);
                             let member = await reaction.message.guild.fetchMember(user.id);
                             member.addRole(role).catch(console.error);
                         }
@@ -352,7 +355,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
                     let arr = reaction.message.channel.parent.children.array();
                     for (let j = 0; j < arr.length; j++) {
                         if (arr[j].topic === topics[i]) {
-                            let role = reaction.message.guild.roles.find("name", arr[j].name);
+                            let role = reaction.message.guild.roles.find(x => x.name, arr[j].name);
                             let member = await reaction.message.guild.fetchMember(user.id);
                             member.removeRole(role).catch(console.error);
                         }
@@ -454,15 +457,10 @@ async function countTeamReacts(rea, rsvpUsers) {
     return [counter, rsvpUsers];
 }
 
-var Tesseract = require('tesseract.js')
-var request = require('request')
-var fs = require('fs')
-var filename = 'pic'
-let passfolder = 'passes/';
 let filenameCounter = 0;
-let filenameext = '.png';
+
 function tesseractImg(url,chan) {
-    var writeFile = fs.createWriteStream(passfolder+filename+(++filenameCounter)+filenameext);
+    var writeFile = fs.createWriteStream(`passes/pic${++filenameCounter}.jpg`);
     request(url).pipe(writeFile).on('close', function() {
         Tesseract.recognize(writeFile.path)
           .catch(err => console.error(err))
@@ -472,9 +470,9 @@ function tesseractImg(url,chan) {
             let s1 = str.indexOf("previous victory at ");
             let s2 = str.indexOf("! Please visit");
             if(s1 === -1 || s2 === -1) {
-                chan.send((++testCounter)+'\n'+url+'\nCan\'t read pass');
-                console.log(testCounter+'\n'+url+' fail '+(++failCount));
+                chan.send(url+'\nCan\'t read pass');
                 console.log(str);
+                console.log('Pass failed\n'+url);
                 return;
             }
             let s3 = str.substr(s1+20,s2-s1-20);
@@ -489,18 +487,14 @@ function tesseractImg(url,chan) {
                         console.log("Can't find date/time");
                         return;
                     }
-                    chan.send((++testCounter)+'\n'+s3+'\n'+details);
+                    chan.send('\n'+s3+'\n'+details);
                     return;
-                    //console.log(details);
                 }
             }
-          })
+          });
       });
       return;
 }
-
-let testCounter = 0;
-let failCount = 0;
 
 async function testPasses(chan) {
     for(let i=0;i<config.testURLs.length;i++) {
