@@ -2,6 +2,13 @@
     "token": "ACCESS_TOKEN",
     "prefix": "!",
     "adminID": "DISCORD_ID_OF_ADMIN",
-    "passChannel": "CHANNEL_FOR_READING_PASSES",
+    "db": {
+        "connectionLimit" : "DATABASE_CONNECTION_LIMIT",
+        "host"            : "DATABASE_HOST_IP",
+        "user"            : "USERNAME_FOR_DATABASE_SERVER",
+        "password"        : "PASSWORD_FOR_DATABASE",
+        "database"        : "DATABASE",
+        "passChannel": "CHANNEL_FOR_READING_PASSES"
+    },
     "testURLs": ["LIST_OF_URLS_TO_TEST"]
 }
