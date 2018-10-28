@@ -31,21 +31,21 @@ client.on("ready", () => {
 
 client.on("message", async message => {
     if (message.type === "PINS_ADD" && message.author.bot) return message.delete();
-    // This event will run on every single message received, from any channel or DM.
+
     // Ignores messages from all bots
     if (message.author.bot) return;
 
+    /*
     if (message.channel.id === config.passChannel) {
         message.attachments.every(async function(a) {
             message.channel.send('Processing Pass');
             //testPasses(message.channel);
             tesseractImg(a.url,message.channel);
         });
-    }
+    }*/
 
     // Ignores messages without prefix
     if (message.content.indexOf(config.prefix) !== 0) return;
-
 
     // Splits command into array
     const args = message.content.slice(config.prefix.length).trim().split(/ +/g);
@@ -53,7 +53,7 @@ client.on("message", async message => {
 
     // Outputs users with a role in the channel. Sorts them alphabetically.
     if (command === 'rolecall' || command === 'rollcall' || args[0] === 'call' && (command === 'roll' || command === 'role')) {
-        let sweetrole = message.guild.roles.find(x => x.name, message.channel.name);
+        let sweetrole = message.guild.roles.find(x => x.name === message.channel.name);
         if (sweetrole) {
             let roleusers = '';
             let maparr = message.guild.roles.get(sweetrole.id).members.map(m => m.displayName);
@@ -73,53 +73,41 @@ client.on("message", async message => {
         if (sweetrole) {
             message.member.removeRole(sweetrole).then(message.channel.send('\:wave:')).catch(console.error);
         }
-        //broken
-    } else if (command === "team" || command === "teams") {
+    } else if (command === "team" || command === "teams" || command === "count" || command === "rsvpcount") {
         let teamMsg = await message.channel.fetchPinnedMessages();
         await message.channel.fetchMessages({limit: 100});
         teamMsg = teamMsg.array();
-        if (teamMsg.length < 3) {
-            message.channel.send("There are some of each team ¯\\_(ツ)_/¯");
-            return;
-        } else if (message.channel.messages.size >= 100) {
+        if (message.channel.messages.size >= 100) {
             message.channel.send('There are too many messages in the channel check ¯\\_(ツ)_/¯');
             return
         }
         let rsvpUsers = [];
         let mems = [];
-        let instinkCount = 0;
 
-        // best team
-        let mystakeCount = 0;
-
-        // bit of a stretch XD
-        let failorCount = 0;
+        let raiderCount;
+        
         for (let i = 0; i < teamMsg.length; i++) {
-            if (teamMsg[i].content === "Please react to this message with the number emoji of VALOR accounts you will be raiding with\n------") {
+            if (teamMsg[i].content === 'Please react to this message with the number of accounts you will be raiding with.') {
                 let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                [failorCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
-            } else if (teamMsg[i].content === "Please react to this message with the number emoji of INSTINCT accounts you will be raiding with\n------") {
-                let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                [instinkCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
-            } else if (teamMsg[i].content === "Please react to this message with the number emoji of MYSTIC accounts you will be raiding with\n------") {
-                let rea = await message.channel.fetchMessage(teamMsg[i].id);
-                [mystakeCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
+                [raiderCount, rsvpUsers] = await countTeamReacts(rea, rsvpUsers);
             }
         }
         // Removes duplicate entries from rsvpUsers
         rsvpUsers = Array.from(new Set(rsvpUsers));
-        let role = message.guild.roles.find(x => x.name, message.channel.name);
+        let role = message.guild.roles.find(x => x.name === message.channel.name);
         if (role) {
-            mems = role.members.filterArray(mems => {
+            mems = role.members.filter(mems => {
                 if (rsvpUsers.indexOf(mems.id) < 0) {
                     return mems.id;
                 }
             });
         }
+        mems = mems.array();
         // TODO Fix bug where reactions do not show after 100 messages.
-        let rsvpString = "**RSVP Team Count** (from pinned messages)\nInstinct: " + instinkCount + "\nMystic: " + mystakeCount + "\nValor: " + failorCount;
+        // 1+2+3+..+10 = 55
+        let rsvpString = "**RSVP Count** (from pinned messages)\n" + (raiderCount-55);
         if (mems.length > 0) {
-            rsvpString += "\n\nUsers without a team react: ";
+            rsvpString += "\n\nUsers without a react: ";
             for (let i = 0; i < mems.length; i++) {
                 rsvpString += mems[i].displayName + (i < mems.length - 1 ? ", " : "");
             }
@@ -130,7 +118,6 @@ client.on("message", async message => {
     } else if (command === "react" || command === "reacts") {
         message.channel.send('Reactions on Mobile:\nScroll to the top of the channel, hold down on the message, tap on "Add Reactions", search for the number, and click on it.\nReactions on Desktop:\nScroll to the top of the channel, tap on the smiley face next to the message, then search for the number, and click on it.');
     }
-
 
     // Ignores messages not from "Admin" role
     if (!message.member.roles.some(r => ["Admin"].includes(r.name))) return;
@@ -369,16 +356,12 @@ client.on('messageReactionRemove', async (reaction, user) => {
 async function welcomeMessage(c) {
     c.send('Welcome to your EX raid family! Congratulations on getting a pass. So that we give everybody the best chance of success, please use these channels to co-ordinate between yourselves. Keep an eye out for each other at the raid. It is everybody\'s responsibility to make sure all EX raid pass carriers get a chance to catch this legendary Pokémon. Happy raiding!\n------')
         .catch(console.error);
-    c.send('Please react to this message with the number emoji of MYSTIC accounts you will be raiding with\n------').then(message => {
+    c.send('Please react to this message with the number of accounts you will be raiding with.').then(async message => {
         message.pin();
+        for (let i = 26; i < regionalEmojis.length; i++) {
+            await message.react(regionalEmojis[i]).catch(console.error);
+        }
     }).catch(console.error);
-    c.send('Please react to this message with the number emoji of VALOR accounts you will be raiding with\n------').then(message => {
-        message.pin();
-    }).catch(console.error);
-    c.send('Please react to this message with the number emoji of INSTINCT accounts you will be raiding with\n------').then(message => {
-        message.pin();
-    }).catch(console.error);
-    c.send('*Example: If I am responding for myself (Valor),  my wife (Valor) and my son (Mystic), I would react with a :two: to the Valor message and a :one: to the Mystic message.*\n\nTo add a reaction on mobile: long press on the message, click on "Add Reaction", search for the number with the top bar(e.g. "two"), then select it.\nTo add a reaction on desktop: click on the smiley face to the right of the message, search for the number with the search bar (e.g. "three"), then select it.');
 }
 
 async function countTeamReacts(rea, rsvpUsers) {
