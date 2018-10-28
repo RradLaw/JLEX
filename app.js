@@ -120,7 +120,7 @@ client.on("message", async message => {
     }
 
     // Ignores messages not from "Admin" role
-    if (!message.member.roles.some(r => ["Admin"].includes(r.name))) return;
+    if (!message.member.roles.some(r => [config.adminRole].includes(r.name))) return;
 
     if (command === "help" || command === "commands") {
         message.channel.send('Admin commands:\n `!exwelcome` `!addexraid` `!deleteexraid` `!listexraids` `!deletestarting` `!liststarting`\n Contact Jazzalaw for more info.');

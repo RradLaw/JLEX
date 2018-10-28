@@ -2,6 +2,7 @@
     "token": "ACCESS_TOKEN",
     "prefix": "!",
     "adminID": "DISCORD_ID_OF_ADMIN",
+    "adminRole": "ROLE_NAME_OF_ADMINS",
     "db": {
         "connectionLimit" : "DATABASE_CONNECTION_LIMIT",
         "host"            : "DATABASE_HOST_IP",
