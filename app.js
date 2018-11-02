@@ -342,7 +342,7 @@ client.on('messageReactionRemove', async (reaction, user) => {
                     let arr = reaction.message.channel.parent.children.array();
                     for (let j = 0; j < arr.length; j++) {
                         if (arr[j].topic === topics[i]) {
-                            let role = reaction.message.guild.roles.find(x => x.name, arr[j].name);
+                            let role = reaction.message.guild.roles.find(x => x.name === arr[j].name);
                             let member = await reaction.message.guild.fetchMember(user.id);
                             member.removeRole(role).catch(console.error);
                         }
