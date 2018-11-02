@@ -38,7 +38,7 @@ client.on("message", async message => {
     /*
     if (message.channel.id === config.passChannel) {
         message.attachments.every(async function(a) {
-            message.channel.send('Processing Pass');
+            //message.channel.send('Processing Pass');
             //testPasses(message.channel);
             tesseractImg(a.url,message.channel);
         });
@@ -142,18 +142,18 @@ client.on("message", async message => {
                     channel.setParent(message.channel.parent);
 
 
-                    let exRole = message.guild.roles.find(x => x.name, "ExRaids");
-                    channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+                    let exRole = message.guild.roles.find(x => x.name === "ExRaids");
+                    channel.overwritePermissions(exRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
 
-                    let erroneRole = message.guild.roles.find(x => x.name, "@everyone");
-                    await channel.overwritePermissions(erroneRole, { READ_MESSAGES: false }).then(welcomeMessage(channel)).catch(console.error);
-                    let modRole = message.guild.roles.find(x => x.name, "Senior Moderator");
-                    channel.overwritePermissions(modRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+                    let erroneRole = message.guild.roles.find(x => x.name === "@everyone");
+                    await channel.overwritePermissions(erroneRole, { VIEW_CHANNEL: false }).then(welcomeMessage(channel)).catch(console.error);
+                    let modRole = message.guild.roles.find(x => x.name === "Senior Moderator");
+                    channel.overwritePermissions(modRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
                     server.createRole({ name: raidName })
                         .then(role => {
-                            channel.overwritePermissions(role, { READ_MESSAGES: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
+                            channel.overwritePermissions(role, { VIEW_CHANNEL: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
                         }).catch(console.error);
 
                     channel.setTopic(raidDesc).catch(console.error);
@@ -287,11 +287,11 @@ client.on("message", async message => {
                     channel.setParent(message.channel.parent);
 
                     let exRole = message.guild.roles.find(x => x.name, "ExRaids");
-                    channel.overwritePermissions(exRole, { READ_MESSAGES: true, SEND_MESSAGES: true }).catch(console.error);
+                    channel.overwritePermissions(exRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
                     server.createRole({ name: raidName })
                         .then(role => {
-                            channel.overwritePermissions(role, { READ_MESSAGES: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
+                            channel.overwritePermissions(role, { VIEW_CHANNEL: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
                         }).catch(console.error);
 
                     channel.setTopic(raidDesc).catch(console.error);
@@ -316,7 +316,7 @@ client.on('messageReactionAdd', async (reaction, user) => {
                     let arr = reaction.message.channel.parent.children.array();
                     for (let j = 0; j < arr.length; j++) {
                         if (arr[j].topic === topics[i]) {
-                            let role = reaction.message.guild.roles.find(x => x.name, arr[j].name);
+                            let role = reaction.message.guild.roles.find(x => x.name === arr[j].name);
                             let member = await reaction.message.guild.fetchMember(user.id);
                             member.addRole(role).catch(console.error);
                         }
