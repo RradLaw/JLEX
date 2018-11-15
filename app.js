@@ -3,6 +3,8 @@ let Tesseract = require('tesseract.js');
 let request = require('request');
 let fs = require('fs');
 
+const models = require('./models');
+
 const client = new Discord.Client();
 
 const regionalEmojis = ['🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯', '🇰', '🇱', '🇲', '🇳', '🇴', '🇵', '🇶', '🇷', '🇸', '🇹', '🇺', '🇻', '🇼', '🇽', '🇾', '🇿', '0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
@@ -69,7 +71,7 @@ client.on("message", async message => {
         }
         // Removes user from the channel
     } else if (command === "leave") {
-        let sweetrole = message.guild.roles.find(x => x.name, message.channel.name);
+        let sweetrole = message.guild.roles.find(x => x.name === message.channel.name);
         if (sweetrole) {
             message.member.removeRole(sweetrole).then(message.channel.send('\:wave:')).catch(console.error);
         }
@@ -132,7 +134,6 @@ client.on("message", async message => {
 
         message.content.split(/\r?\n/).forEach(function (element) {
             const args = element.slice(config.prefix.length).trim().split(/ +/g);
-            const command = args.shift().toLowerCase();
 
             let raidName = args.shift() || 'exraid' + Math.floor(Math.random() * 10000);
             let raidDesc = args.join(' ') || raidName;
@@ -141,10 +142,8 @@ client.on("message", async message => {
                 .then(async channel => {
                     channel.setParent(message.channel.parent);
 
-
                     let exRole = message.guild.roles.find(x => x.name === "ExRaids");
                     channel.overwritePermissions(exRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
-
 
                     let erroneRole = message.guild.roles.find(x => x.name === "@everyone");
                     await channel.overwritePermissions(erroneRole, { VIEW_CHANNEL: false }).then(welcomeMessage(channel)).catch(console.error);
@@ -298,8 +297,65 @@ client.on("message", async message => {
 
                 });
         }
+    } else if (command === "parseraid") {
+        const parseRaidArray = message.content.slice(config.prefix.length).trim().split(/`+/g);
+        if(parseRaidArray.length > 4) {
+            let raidName = parseRaidArray[1];
+            let guids = await models.findGym(raidName);
+            let raidDateTime = parseRaidArray[3];
+
+            if(!parseTime(raidDateTime)) {
+                message.reply("datetime not in the format of YYYY-MM-DD HH:MM");
+                return;
+            }
+
+            if(guids.length === 0) {
+                message.reply(`couldn't find gym "${raidName}" in database.`);
+            } else if (guids.length > 1) {
+                let m = "Too many gyms with that name. Use one of the commands below to add the raid.";
+                for(let i=0;i<guids.length;i++) {
+                    m+=`\n\`\`!parsegym \`${guids[i].guid}\` \`${raidDateTime}\` \`\`\n${config.websiteLink}/?lat=${guids[i].latitude}&lng=${guids[i].longitude}&z=19\n`;
+                }
+                message.reply(m);
+            } else {
+                parseRaid(guids[0].guid,raidName,raidDateTime);
+            }
+        } else {
+            message.reply("not enough data to enter raid. Command needs both a gym name and a datetime in seperate code blocks.");
+        }
+    } else if (command === "parsegym") {
+        const parseRaidArray = message.content.slice(config.prefix.length).trim().split(/`+/g);
+        if(parseRaidArray.length > 4) {
+            let raidGuid = parseRaidArray[1];
+            let raidName = await models.findGymName(raidGuid);
+            let raidDateTime = parseRaidArray[3];
+            
+            if(!parseTime(raidDateTime)) {
+                message.reply("datetime not in the format of YYYY-MM-DD HH:MM");
+                return;
+            }
+
+            if(raidName.length === 0) {
+                message.reply(`couldn't find gym "${raidGuid}" in database.`);
+            } else {
+                parseRaid(raidGuid,raidName[0].name,raidDateTime);
+            }
+        } else {
+            message.reply("not enough data to enter raid. Command needs both a gym guid and a datetime in seperate code blocks.");
+        }
     }
 });
+
+// tests that dt is of format "YYYY-MM-DD HH:MM" 
+function parseTime(dt) {
+    let patt = new RegExp(/\d\d\d\d-\d\d-\d\d \d\d:\d\d/);
+    return patt.test(dt);
+}
+
+async function parseRaid(guid,name,datetime) {
+    console.log(guids[0].guid);
+    let date = new Date(dateTime);
+}
 
 client.on('messageReactionAdd', async (reaction, user) => {
     if (user.id !== client.user.id && reaction.message.author.id === client.user.id) {

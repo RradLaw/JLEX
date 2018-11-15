@@ -4,17 +4,16 @@ const mysql       = require('mysql');
 const config = require("./config2.json");
 
 let rmconnection = mysql.createPool({
-    connectionLimit : config.sql.connections,
-    host            : config.sql.rmhost,
-    user            : config.sql.rmuser,
-    password        : config.sql.rmpass,
-    database        : config.sql.rmdb,
+    connectionLimit : config.db.connections,
+    host            : config.db.host,
+    user            : config.db.user,
+    password        : config.db.password,
+    database        : config.db.database,
     timezone        : 'utc',
     supportBigNumbers: true, 
     bigNumberStrings: true
   });
 
-  
 let rmdb = Bluebird.promisifyAll(rmconnection);
 
 rmdb.query('CREATE TABLE IF NOT EXISTS `exraids` (`guid` VARCHAR(50) NOT NULL COLLATE \'utf8mb4_unicode_ci\',`starttime` DATETIME NOT NULL, PRIMARY KEY (`guid`,`starttime`)) COLLATE=\'utf8_general_ci\'ENGINE=InnoDB;');
@@ -24,7 +23,11 @@ module.exports = {
 
     },
     findGym: async function (gymName) {
-        let jim = await rmdb.queryAsync(`SELECT guid FROM portal WHERE portal.name = ${rmconnection.escape(gymName)} AND is_gym=1;`);
+        let jim = await rmdb.queryAsync(`SELECT guid, latitude, longitude FROM portal WHERE name = ${rmconnection.escape(gymName)} AND is_gym=1;`);
+        return jim;
+    },
+    findGymName: async function (gymGuid) {
+        let jim = await rmdb.queryAsync(`SELECT name FROM portal WHERE guid = ${rmconnection.escape(gymGuid)} AND is_gym=1;`);
         return jim;
     },
     getGym: async function (g) {
