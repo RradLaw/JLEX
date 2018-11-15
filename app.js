@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-let Tesseract = require('tesseract.js');
+//let Tesseract = require('tesseract.js');
 let request = require('request');
 let fs = require('fs');
 
