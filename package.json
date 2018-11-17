@@ -4,7 +4,8 @@
   "description": "Discord bot for managing ex raids",
   "dependencies": {
     "bluebird": "^3.5.2",
-    "mysql": "^2.16.0"
+    "mysql": "^2.16.0",
+    "request":,
   },
   "main": "app.js",
   "repository": {

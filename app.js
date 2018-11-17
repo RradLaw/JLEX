@@ -134,7 +134,7 @@ client.on("message", async message => {
 
         message.content.split(/\r?\n/).forEach(function (element) {
             const args = element.slice(config.prefix.length).trim().split(/ +/g);
-
+            args.shift();
             let raidName = args.shift() || 'exraid' + Math.floor(Math.random() * 10000);
             let raidDesc = args.join(' ') || raidName;
 
