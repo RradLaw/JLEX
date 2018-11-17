@@ -173,8 +173,8 @@ client.on("message", async message => {
         } else {
             for (let i = 0; i < args.length; i++) {
                 args[i] = args[i].toLowerCase();
-                let jackiechannel = message.guild.channels.find(x => x.name, args[i]);
-                let role = message.guild.roles.find(x => x.name, args[i]);
+                let jackiechannel = message.guild.channels.find(x => x.name === args[i]);
+                let role = message.guild.roles.find(x => x.name === args[i]);
                 if (role) role.delete().catch(console.error);
                 if (jackiechannel) {
                     jackiechannel.delete().catch(console.error);
@@ -193,7 +193,7 @@ client.on("message", async message => {
         let msg = 'React to add yourself to the exraid channels\n\n';
         let topic = '';
         for (let i = 0; i < args.length; i += 2) {
-            topic = client.channels.find(x => x.name, args[i]);
+            topic = client.channels.find(x => x.name === args[i]);
             msg += args[i + 1] + " : `" + topic.topic + "` <#" + topic.id + ">\n\n";
         }
         message.channel.send(msg)
@@ -214,7 +214,7 @@ client.on("message", async message => {
 
             for (let i = 0; i < jackieChannels.length; i++) {
                 if (args[0] === (jackieChannels[i].name).substring(0, args[0].length)) {
-                    let role = message.guild.roles.find(x => x.name, jackieChannels[i].name);
+                    let role = message.guild.roles.find(x => x.name === jackieChannels[i].name);
                     if (role) role.delete().catch(console.error);
                     (jackieChannels[i]).delete().catch(console.error);
                 }
@@ -285,7 +285,7 @@ client.on("message", async message => {
                 .then(async channel => {
                     channel.setParent(message.channel.parent);
 
-                    let exRole = message.guild.roles.find(x => x.name, "ExRaids");
+                    let exRole = message.guild.roles.find(x => x.name === "ExRaids");
                     channel.overwritePermissions(exRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
                     server.createRole({ name: raidName })
