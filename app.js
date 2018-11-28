@@ -1,5 +1,5 @@
 const Discord = require("discord.js");
-//let Tesseract = require('tesseract.js');
+let Tesseract = require('tesseract.js');
 let request = require('request');
 let fs = require('fs');
 const dateFormat = require('dateformat');
@@ -45,14 +45,14 @@ client.on("message", async message => {
     // Ignores messages from all bots
     if (message.author.bot) return;
 
-    /*
+    
     if (message.channel.id === config.passChannel) {
         message.attachments.every(async function(a) {
             //message.channel.send('Processing Pass');
             //testPasses(message.channel);
             tesseractImg(a.url,message.channel);
         });
-    }*/
+    }
 
     // Ignores messages without prefix
     if (message.content.indexOf(config.prefix) !== 0) return;
@@ -311,11 +311,11 @@ client.on("message", async message => {
             let raidName = parseRaidArray[1];
             let guids = await models.findGym(raidName);
             let raidDateTime = parseRaidArray[3];
-
+            /*
             if(!parseTime(raidDateTime)) {
                 message.reply("datetime not in the format of YYYY-MM-DD HH:MM");
                 return;
-            }
+            }*/
 
             if(guids.length === 0) {
                 message.reply(`couldn't find gym "${raidName}" in database.`);
@@ -337,11 +337,11 @@ client.on("message", async message => {
             let raidGuid = parseRaidArray[1];
             let raidName = await models.findGymName(raidGuid);
             let raidDateTime = parseRaidArray[3];
-            
+            /*
             if(!parseTime(raidDateTime)) {
                 message.reply("datetime not in the format of YYYY-MM-DD HH:MM");
                 return;
-            }
+            }*/
 
             if(raidName.length === 0) {
                 message.reply(`couldn't find gym "${raidGuid}" in database.`);
@@ -357,7 +357,8 @@ client.on("message", async message => {
 // tests that dt is of format "YYYY-MM-DD HH:MM" 
 function parseTime(dt) {
     let patt = new RegExp(/\d\d\d\d-\d\d-\d\d \d\d:\d\d/);
-    return patt.test(dt);
+    let patt2 = new RegExp(/\d\d\d\d-\d\d-\d\d \d\d:\d\d [AP][M]/);
+    return (patt.test(dt) || patt2.test(dt));
 }
 
 async function parseRaid(guid,name,dateTime,message) {
@@ -554,6 +555,7 @@ async function countTeamReacts(rea, rsvpUsers) {
 let filenameCounter = 0;
 
 function tesseractImg(url,chan) {
+    chan = client.channels.get(config.adminChannel);
     var writeFile = fs.createWriteStream(`passes/pic${++filenameCounter}.jpg`);
     request(url).pipe(writeFile).on('close', function() {
         Tesseract.recognize(writeFile.path)
@@ -573,15 +575,16 @@ function tesseractImg(url,chan) {
             for(let i=0;i<monthNames.length;i++) {
                 if(str.indexOf(monthNames[i]) !== -1) {
                     let details = str.substr(str.indexOf(monthNames[i]),monthNames[i].length + 50);
-                    if(details.lastIndexOf(" PM ")>0) {
-                        details = details.substr(0,details.lastIndexOf(" PM ")+4);
-                    } else if (details.lastIndexOf(" AM ")) {
-                        details = details.substr(0,details.lastIndexOf(" AM ")+4);
+                    if(details.indexOf(" PM ")>0) {
+                        details = details.substr(0,details.indexOf(" PM ")+4);
+                    } else if (details.indexOf(" AM ")) {
+                        details = details.substr(0,details.indexOf(" AM ")+4);
                     } else {
-                        console.log("Can't find date/time");
+                        chan.send(url+"\nCan't find date/time");
                         return;
                     }
-                    chan.send('\n'+s3+'\n'+details);
+                    let d = new Date();
+                    chan.send(url+'\n```\n!parseraid `'+s3+'` `'+d.getFullYear()+' '+details+'`\n```');
                     return;
                 }
             }
