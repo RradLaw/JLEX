@@ -2,6 +2,7 @@ const Discord = require("discord.js");
 //let Tesseract = require('tesseract.js');
 let request = require('request');
 let fs = require('fs');
+const dateFormat = require('dateformat');
 
 const models = require('./models');
 
@@ -10,12 +11,16 @@ const client = new Discord.Client();
 const regionalEmojis = ['🇦', '🇧', '🇨', '🇩', '🇪', '🇫', '🇬', '🇭', '🇮', '🇯', '🇰', '🇱', '🇲', '🇳', '🇴', '🇵', '🇶', '🇷', '🇸', '🇹', '🇺', '🇻', '🇼', '🇽', '🇾', '🇿', '0⃣', '1⃣', '2⃣', '3⃣', '4⃣', '5⃣', '6⃣', '7⃣', '8⃣', '9⃣', '🔟'];
 const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
+const emojis = [];
+
 // change this to ./config.json to get it to work
 const config = require("./config2.json");
 // config.token contains the bot's token
 // config.prefix contains the message prefix.
 
 const tagID = config.adminID === "DISCORD_ID_OF_ADMIN" ? null : config.adminID;
+
+let rsvp='';
 
 client.on("ready", () => {
     console.log(`Bot has started, with ${client.users.size} users, in ${client.channels.size} channels of ${client.guilds.size} guilds.`);
@@ -26,6 +31,9 @@ client.on("ready", () => {
         for (let j = 0; j < gChannels.length; j++) {
             if (gChannels[j].name === "ex-rsvp" || gChannels[j].name === "ex-rsvp2" ) {
                 gChannels[j].fetchMessages().catch(console.error);
+            }
+            if (gChannels[j].name === "ex-rsvp") {
+                rsvp = gChannels[j];
             }
         }
     }
@@ -147,7 +155,7 @@ client.on("message", async message => {
 
                     let erroneRole = message.guild.roles.find(x => x.name === "@everyone");
                     await channel.overwritePermissions(erroneRole, { VIEW_CHANNEL: false }).then(welcomeMessage(channel)).catch(console.error);
-                    let modRole = message.guild.roles.find(x => x.name === "Senior Moderator");
+                    let modRole = message.guild.roles.find(x => x.name === config.adminRole);
                     channel.overwritePermissions(modRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
                     server.createRole({ name: raidName })
@@ -318,7 +326,7 @@ client.on("message", async message => {
                 }
                 message.reply(m);
             } else {
-                parseRaid(guids[0].guid,raidName,raidDateTime);
+                parseRaid(guids[0].guid,raidName,raidDateTime,message);
             }
         } else {
             message.reply("not enough data to enter raid. Command needs both a gym name and a datetime in seperate code blocks.");
@@ -338,7 +346,7 @@ client.on("message", async message => {
             if(raidName.length === 0) {
                 message.reply(`couldn't find gym "${raidGuid}" in database.`);
             } else {
-                parseRaid(raidGuid,raidName[0].name,raidDateTime);
+                parseRaid(raidGuid,raidName[0].name,raidDateTime,message);
             }
         } else {
             message.reply("not enough data to enter raid. Command needs both a gym guid and a datetime in seperate code blocks.");
@@ -352,32 +360,72 @@ function parseTime(dt) {
     return patt.test(dt);
 }
 
-async function parseRaid(guid,name,datetime) {
-    console.log(guids[0].guid);
+async function parseRaid(guid,name,dateTime,message) {
     let date = new Date(dateTime);
+    let raidName = pad(date.getMonth()+1) +''+ pad(date.getDate())+'-'+(name.toLowerCase()).replace(/[^A-Za-z0-9]/g, '');
+    let raidDesc = name + dateFormat(date," - dddd dd/mm/yy, h:MMtt - ") + dateFormat(date.setMinutes(date.getMinutes()+45),"h:MMtt");
+
+    message.guild.createChannel(raidName, "text")
+        .then(async channel => {
+            channel.setParent(message.channel.parent);
+
+            let exRole = message.guild.roles.find(x => x.name === "ExRaids");
+            channel.overwritePermissions(exRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
+
+            let erroneRole = message.guild.roles.find(x => x.name === "@everyone");
+            await channel.overwritePermissions(erroneRole, { VIEW_CHANNEL: false }).then(welcomeMessage(channel)).catch(console.error);
+            let modRole = message.guild.roles.find(x => x.name === config.adminRole);
+            channel.overwritePermissions(modRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
+
+            message.guild.createRole({ name: raidName })
+                .then(role => {
+                    channel.overwritePermissions(role, { VIEW_CHANNEL: true, SEND_MESSAGES: true, READ_MESSAGE_HISTORY: true, ADD_REACTIONS: true });
+                }).catch(console.error);
+
+            channel.setTopic(raidDesc).catch(console.error);
+
+            rsvp.send(`React to join:\n<#${channel.id}>\n${raidDesc}`)
+                .then(async message => {
+                    await message.react('✅').catch(console.error);
+                }).catch(console.error);;
+
+            const channelArr = message.client.channels.array();
+            let counter = 0;
+            for(let i=0;i<channelArr.length;i++) {
+                if(channelArr[i].parent && channelArr[i].parent.id === message.channel.parent.id) counter++;
+            }
+            message.channel.send(`Exraid ${raidName} created (${counter})`);
+        })
+        .catch(console.error);
 }
 
 client.on('messageReactionAdd', async (reaction, user) => {
     if (user.id !== client.user.id && reaction.message.author.id === client.user.id) {
         let str = reaction.message.content.split("\n");
-        let topics = [];
-        let emojis = [];
         if (reaction.message.channel.name === 'ex-rsvp' || reaction.message.channel.name === 'ex-rsvp2') {
-            for (let i = 2; i < str.length; i += 2) {
-                emojis.push(str[i].substr(0, 2));
-                topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
-            }
-            for (let i = 0; i < emojis.length; i++) {
-                if (reaction.emoji.name === emojis[i]) {
-                    let arr = reaction.message.channel.parent.children.array();
-                    for (let j = 0; j < arr.length; j++) {
-                        if (arr[j].topic === topics[i]) {
-                            let role = reaction.message.guild.roles.find(x => x.name === arr[j].name);
-                            let member = await reaction.message.guild.fetchMember(user.id);
-                            member.addRole(role).catch(console.error);
+            if(str[0] === "React to add yourself to the exraid channels") {
+                let topics = [];
+                let emojis = [];
+                for (let i = 2; i < str.length; i += 2) {
+                    emojis.push(str[i].substr(0, 2));
+                    topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
+                }
+                for (let i = 0; i < emojis.length; i++) {
+                    if (reaction.emoji.name === emojis[i]) {
+                        let arr = reaction.message.channel.parent.children.array();
+                        for (let j = 0; j < arr.length; j++) {
+                            if (arr[j].topic === topics[i]) {
+                                let role = reaction.message.guild.roles.find(x => x.name === arr[j].name);
+                                let member = await reaction.message.guild.fetchMember(user.id);
+                                member.addRole(role).catch(console.error);
+                            }
                         }
                     }
                 }
+            } else if(str[0] === 'React to join:') {
+                let role = reaction.message.guild.roles.find(x => x.name === (reaction.message.guild.channels.get(str[1].substr(2,str[1].length-3))).name);
+                let member = await reaction.message.guild.fetchMember(user.id);
+                member.addRole(role).catch(console.error);
             }
         }
     }
@@ -386,26 +434,33 @@ client.on('messageReactionAdd', async (reaction, user) => {
 client.on('messageReactionRemove', async (reaction, user) => {
     if (user.id !== client.user.id && reaction.message.author.id === client.user.id) {
         let str = reaction.message.content.split("\n");
-        let topics = [];
-        let emojis = [];
         if (reaction.message.channel.name === 'ex-rsvp' || reaction.message.channel.name === 'ex-rsvp2') {
-            for (let i = 2; i < str.length; i += 2) {
-                emojis.push(str[i].substr(0, 2));
-                topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
-            }
-            for (let i = 0; i < emojis.length; i++) {
-                if (reaction.emoji.name === emojis[i]) {
-                    let arr = reaction.message.channel.parent.children.array();
-                    for (let j = 0; j < arr.length; j++) {
-                        if (arr[j].topic === topics[i]) {
-                            let role = reaction.message.guild.roles.find(x => x.name === arr[j].name);
-                            let member = await reaction.message.guild.fetchMember(user.id);
-                            member.removeRole(role).catch(console.error);
+            if(str[0] === "React to add yourself to the exraid channels") {
+                let topics = [];
+                let emojis = [];
+                for (let i = 2; i < str.length; i += 2) {
+                    emojis.push(str[i].substr(0, 2));
+                    topics.push(str[i].substring(6, str[i].indexOf("`", 6)));
+                }
+                for (let i = 0; i < emojis.length; i++) {
+                    if (reaction.emoji.name === emojis[i]) {
+                        let arr = reaction.message.channel.parent.children.array();
+                        for (let j = 0; j < arr.length; j++) {
+                            if (arr[j].topic === topics[i]) {
+                                let role = reaction.message.guild.roles.find(x => x.name === arr[j].name);
+                                let member = await reaction.message.guild.fetchMember(user.id);
+                                member.removeRole(role).catch(console.error);
+                            }
                         }
                     }
                 }
+            } else if(str[0] === 'React to join:') {
+                let role = reaction.message.guild.roles.find(x => x.name === (reaction.message.guild.channels.get(str[1].substr(2,str[1].length-3))).name);
+                let member = await reaction.message.guild.fetchMember(user.id);
+                member.removeRole(role).catch(console.error);
             }
         }
+        
     }
 });
 
@@ -540,6 +595,9 @@ async function testPasses(chan) {
         tesseractImg(config.testURLs[i],chan);
     }
 }
+
+function pad(n){return n<10 ? '0'+n : n}
+
 
 client.on('error', console.error);
 
