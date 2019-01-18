@@ -46,7 +46,7 @@ client.on("message", async message => {
     if (message.author.bot) return;
 
     
-    if (message.channel.id === config.passChannel) {
+    if (message.channel.id === config.passChannel || message.channel.id === config.adminChannel) {
         message.attachments.every(async function(a) {
             //message.channel.send('Processing Pass');
             //testPasses(message.channel);
