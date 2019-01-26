@@ -3,6 +3,7 @@
     "prefix": "!",
     "adminID": "DISCORD_ID_OF_ADMIN",
     "adminRole": "ROLE_NAME_OF_ADMINS",
+    "adminRole2": "ROLE_NAME_OF_ADMINS",
     "passChannel": "CHANNEL_ID_OF_PASSES_BEING_POSTED",
     "adminChannel": "CHANNEL_ID_FOR_ADMIN_COMMANDS",
     "websiteLink": "LINK_TO_MAPPING_WEBSITE",

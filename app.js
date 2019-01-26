@@ -377,6 +377,8 @@ async function parseRaid(guid,name,dateTime,message) {
             await channel.overwritePermissions(erroneRole, { VIEW_CHANNEL: false }).then(welcomeMessage(channel)).catch(console.error);
             let modRole = message.guild.roles.find(x => x.name === config.adminRole);
             channel.overwritePermissions(modRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
+            let modRole2 = message.guild.roles.find(x => x.name === config.adminRole2);
+            channel.overwritePermissions(modRole2, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
             message.guild.createRole({ name: raidName })
                 .then(role => {
