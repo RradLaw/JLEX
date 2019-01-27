@@ -363,6 +363,7 @@ function parseTime(dt) {
 
 async function parseRaid(guid,name,dateTime,message) {
     let date = new Date(dateTime);
+    models.addRaid(guid,dateFormat(date,"yyyy-mm-dd HH:MM:ss"));
     let raidName = pad(date.getMonth()+1) +''+ pad(date.getDate())+'-'+(name.toLowerCase()).replace(/[^A-Za-z0-9]/g, '');
     let raidDesc = name + dateFormat(date," - dddd dd/mm/yy, h:MMtt - ") + dateFormat(date.setMinutes(date.getMinutes()+45),"h:MMtt");
 

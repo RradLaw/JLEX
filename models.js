@@ -19,8 +19,8 @@ let rmdb = Bluebird.promisifyAll(rmconnection);
 rmdb.query('CREATE TABLE IF NOT EXISTS `exraids` (`guid` VARCHAR(50) NOT NULL COLLATE \'utf8mb4_unicode_ci\',`starttime` DATETIME NOT NULL, PRIMARY KEY (`guid`,`starttime`)) COLLATE=\'utf8_general_ci\'ENGINE=InnoDB;');
 
 module.exports = {
-    addRaid: async function(name, dt) {
-
+    addRaid: async function(guid, dt) {
+        await rmdb.queryAsync(`INSERT INTO exraids VALUES (?,?);`,[guid,dt]);
     },
     findGym: async function (gymName) {
         let jim = await rmdb.queryAsync(`SELECT guid, latitude, longitude FROM portal WHERE name = ${rmconnection.escape(gymName)} AND is_gym=1;`);
