@@ -20,7 +20,7 @@ rmdb.query('CREATE TABLE IF NOT EXISTS `exraids` (`guid` VARCHAR(50) NOT NULL CO
 
 module.exports = {
     addRaid: async function(guid, dt) {
-        await rmdb.queryAsync(`INSERT INTO exraids VALUES (?,?);`,[guid,dt]);
+        await rmdb.queryAsync(`INSERT IGNORE INTO exraids VALUES (?,?);`,[guid,dt]);
     },
     findGym: async function (gymName) {
         let jim = await rmdb.queryAsync(`SELECT guid, latitude, longitude FROM portal WHERE name = ${rmconnection.escape(gymName)} AND is_gym=1;`);
