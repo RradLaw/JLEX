@@ -20,18 +20,34 @@ rmdb.query('CREATE TABLE IF NOT EXISTS `exraids` (`guid` VARCHAR(50) NOT NULL CO
 
 module.exports = {
     addRaid: async function(guid, dt) {
-        await rmdb.queryAsync(`INSERT IGNORE INTO exraids VALUES (?,?);`,[guid,dt]);
+        try{
+            await rmdb.queryAsync(`INSERT IGNORE INTO exraids VALUES (?,?);`,[guid,dt]);
+        } catch (e) {
+            console.error(`models.addRaid error: ${e}`);
+        }
     },
     findGym: async function (gymName) {
-        let jim = await rmdb.queryAsync(`SELECT guid, latitude, longitude FROM portal WHERE name = ${rmconnection.escape(gymName)} AND is_gym=1;`);
-        return jim;
+        try {
+            let jim = await rmdb.queryAsync(`SELECT guid, latitude, longitude FROM portal WHERE name = ${rmconnection.escape(gymName)} AND is_gym=1;`);
+            return jim;
+        } catch (e) {
+            console.error(`models.findGym error: ${e}`);
+        }
     },
     findGymName: async function (gymGuid) {
-        let jim = await rmdb.queryAsync(`SELECT name FROM portal WHERE guid = ${rmconnection.escape(gymGuid)} AND is_gym=1;`);
-        return jim;
+        try {
+            let jim = await rmdb.queryAsync(`SELECT name FROM portal WHERE guid = ${rmconnection.escape(gymGuid)} AND is_gym=1;`);
+            return jim;
+        } catch (e) {
+            console.error(`models.findGymName error: ${e}`);
+        }
     },
     getGym: async function (g) {
-        let pam = await rmdb.queryAsync(`SELECT name, url, latitude, longitude, suburb, guid FROM portal WHERE guid = ${rmconnection.escape(g)};`);
-        return pam;
+        try {
+            let pam = await rmdb.queryAsync(`SELECT name, url, latitude, longitude, suburb, guid FROM portal WHERE guid = ${rmconnection.escape(g)};`);
+            return pam;
+        } catch (e) {
+            console.error(`models.findGymName error: ${e}`);
+        }
     },
 }
