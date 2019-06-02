@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "Discord bot for managing ex raids",
   "dependencies": {
-    "bluebird": "^3.5.2",
+    "bluebird": "^3.5.5",
     "dateformat": "^3.0.3",
-    "mysql": "^2.16.0",
+    "mysql": "^2.17.1",
     "request": ""
   },
   "main": "app.js",

@@ -574,22 +574,32 @@ function tesseractImg(url,chan) {
                 console.log('Pass failed\n'+url);
                 return;
             }
+            // Gym name
             let s3 = str.substr(s1+20,s2-s1-20);
+            // Remove double spaces
+            s3 = s3.replace(/\s\s+/g, ' ');
+            
+            let found = false;
             for(let i=0;i<monthNames.length;i++) {
                 if(str.indexOf(monthNames[i]) !== -1) {
                     let details = str.substr(str.indexOf(monthNames[i]),monthNames[i].length + 50);
-                    if(details.indexOf(" PM ")>0) {
-                        details = details.substr(0,details.indexOf(" PM ")+4);
-                    } else if (details.indexOf(" AM ")) {
+                    console.log(details); 
+                    if (details.indexOf(" AM ")) {
                         details = details.substr(0,details.indexOf(" AM ")+4);
+                    } else if(details.indexOf(" PM ")>0) {
+                        details = details.substr(0,details.indexOf(" PM ")+4);
                     } else {
                         chan.send(url+"\nCan't find date/time");
                         return;
                     }
                     let d = new Date();
                     chan.send(url+'\n```\n!parseraid `'+s3+'` `'+d.getFullYear()+' '+details+'`\n```');
+                    found = true;
                     return;
                 }
+            }
+            if(!found) {
+                chan.send(url+"\nCan't find date/time");
             }
           });
       });
