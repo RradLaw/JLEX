@@ -574,24 +574,27 @@ function tesseractImg(url,chan) {
                 console.log('Pass failed\n'+url);
                 return;
             }
-            // Gym name
+            // Remove double spaces in Gym name
             let s3 = str.substr(s1+20,s2-s1-20);
-            // Remove double spaces
             s3 = s3.replace(/\s\s+/g, ' ');
+            // Ensure digits and letters have spaces around them
+            str = str.replace(/\d(?=[a-zA-Z])+/g, '$& ');
+            str = str.replace(/[a-zA-Z](?=\d)+/g, '$& ');
             
             let found = false;
             for(let i=0;i<monthNames.length;i++) {
                 if(str.indexOf(monthNames[i]) !== -1) {
                     let details = str.substr(str.indexOf(monthNames[i]),monthNames[i].length + 50);
-                    if (details.indexOf(" AM ")) {
-                        details = details.substr(0,details.indexOf(" AM ")+4);
+                    if (details.indexOf(" AM ")>0) {
+                        details = details.substr(0,details.indexOf(" AM ")+3);
                     } else if(details.indexOf(" PM ")>0) {
-                        details = details.substr(0,details.indexOf(" PM ")+4);
+                        details = details.substr(0,details.indexOf(" PM ")+3);
                     } else {
                         chan.send(url+"\nCan't find date/time");
                         return;
                     }
                     let d = new Date();
+                    // Makes sure there are spaces between letters and numbers
                     let embed = new Discord.RichEmbed()
                         .setDescription(`\`\`\`\n!parseraid \`${s3}\` \`${d.getFullYear()} ${details}\`\n\`\`\``)
                         .setImage(url);
