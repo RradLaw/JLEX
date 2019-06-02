@@ -569,7 +569,7 @@ function tesseractImg(url,chan) {
             let s1 = str.toLowerCase().indexOf("previous victory at ");
             let s2 = str.toLowerCase().indexOf("! please visit");
             if(s1 === -1 || s2 === -1) {
-                chan.send(url+'\nCan\'t read pass');
+                chan.send(`${url}\nCan't read pass\n\`\`\`${str}\n\`\`\``);
                 console.log(str);
                 console.log('Pass failed\n'+url);
                 return;
