@@ -566,8 +566,8 @@ function tesseractImg(url,chan) {
           .then(function (result) {
             let str = result.text.replace(/\n/g, " ");
             str = str.replace("!  P", "! P");
-            let s1 = str.indexOf("previous victory at ");
-            let s2 = str.indexOf("! Please visit");
+            let s1 = str.toLowerCase().indexOf("previous victory at ");
+            let s2 = str.toLowerCase().indexOf("! please visit");
             if(s1 === -1 || s2 === -1) {
                 chan.send(url+'\nCan\'t read pass');
                 console.log(str);
@@ -583,7 +583,6 @@ function tesseractImg(url,chan) {
             for(let i=0;i<monthNames.length;i++) {
                 if(str.indexOf(monthNames[i]) !== -1) {
                     let details = str.substr(str.indexOf(monthNames[i]),monthNames[i].length + 50);
-                    console.log(details); 
                     if (details.indexOf(" AM ")) {
                         details = details.substr(0,details.indexOf(" AM ")+4);
                     } else if(details.indexOf(" PM ")>0) {
@@ -593,7 +592,10 @@ function tesseractImg(url,chan) {
                         return;
                     }
                     let d = new Date();
-                    chan.send(url+'\n```\n!parseraid `'+s3+'` `'+d.getFullYear()+' '+details+'`\n```');
+                    let embed = new Discord.RichEmbed()
+                        .setDescription(`\`\`\`\n!parseraid \`${s3}\` \`${d.getFullYear()} ${details}\`\n\`\`\``)
+                        .setImage(url);
+                    chan.send(embed);
                     found = true;
                     return;
                 }
