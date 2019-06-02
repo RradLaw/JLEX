@@ -560,7 +560,7 @@ let filenameCounter = 0;
 
 function tesseractImg(url,chan) {
     chan = client.channels.get(config.adminChannel);
-    var writeFile = fs.createWriteStream(`passes/pic${++filenameCounter}.jpg`);
+    var writeFile = fs.createWriteStream(`passes\\pic${++filenameCounter}.jpg`);
     request(url).pipe(writeFile).on('close', function() {
         Tesseract.recognize(writeFile.path)
           .catch(err => console.error(err))
