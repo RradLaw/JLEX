@@ -154,7 +154,8 @@ client.on("message", async message => {
                     channel.overwritePermissions(exRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
                     let erroneRole = message.guild.roles.find(x => x.name === "@everyone");
-                    await channel.overwritePermissions(erroneRole, { VIEW_CHANNEL: false }).then(welcomeMessage(channel)).catch(console.error);
+                    await channel.overwritePermissions(erroneRole, { VIEW_CHANNEL: false });
+                    welcomeMessage(channel);
                     let modRole = message.guild.roles.find(x => x.name === config.adminRole);
                     channel.overwritePermissions(modRole, { VIEW_CHANNEL: true, SEND_MESSAGES: true }).catch(console.error);
 
